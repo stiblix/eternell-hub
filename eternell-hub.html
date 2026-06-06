@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eternell Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+:root{
+  --bg:#0e0e12;--bg2:#16161d;--bg3:#1e1e27;--bg4:#242430;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);
+  --text:#f0eee8;--text2:#9a9893;--text3:#5a5856;
+  --gold:#c9a96e;--gold2:#e8c98a;--gold-bg:rgba(201,169,110,0.08);--gold-border:rgba(201,169,110,0.25);
+  --green:#4caf7d;--red:#e05c5c;--blue:#5b8dee;--purple:#8b7fd4;--orange:#e8944a;
+  --radius:14px;--radius-sm:8px;--radius-pill:999px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.layout{display:flex;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{width:230px;background:var(--bg2);border-right:0.5px solid var(--border);padding:1.5rem 0.75rem;display:flex;flex-direction:column;gap:1.25rem;position:fixed;top:0;left:0;bottom:0;z-index:10;overflow-y:auto}
+.brand-logo{display:flex;align-items:center;gap:10px;padding:0.25rem 0.75rem}
+.brand-mark{width:38px;height:38px;background:linear-gradient(135deg,#1a1a2e,#2d2d4e);border:0.5px solid var(--gold);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--gold);font-family:'DM Serif Display',serif;font-size:17px;flex-shrink:0}
+.brand-name{font-size:15px;font-weight:500;color:var(--text)}
+.brand-tagline{font-size:11px;color:var(--text3);margin-top:1px}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav-section{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;padding:0 12px;margin-top:0.75rem;margin-bottom:2px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;color:var(--text2);transition:all 0.15s;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif}
+.nav-item:hover{background:var(--bg3);color:var(--text)}
+.nav-item.active{background:var(--gold-bg);color:var(--gold)}
+.nav-item i{font-size:16px;flex-shrink:0}
+.sidebar-bottom{margin-top:auto;display:flex;flex-direction:column;gap:8px}
+.sync-status{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:6px;padding:0 12px}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0}
+.sync-dot.off{background:var(--red)}
+.clock-widget{background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius);padding:1rem;text-align:center}
+.clock-time{font-size:26px;font-weight:300;letter-spacing:2px}
+.clock-date{font-size:11px;color:var(--text3);margin-top:3px}
+.clock-weather{font-size:11px;color:var(--gold);margin-top:4px;display:flex;align-items:center;justify-content:center;gap:4px}
+
+/* MAIN */
+.main{margin-left:230px;flex:1;padding:2rem;min-width:0}
+.page{display:none}.page.active{display:block}
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2rem;gap:1rem}
+.page-title{font-family:'DM Serif Display',serif;font-size:26px;color:var(--text);font-weight:400}
+.page-sub{font-size:13px;color:var(--text3);margin-top:3px}
+.topbar-actions{display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--radius-pill);font-size:13px;cursor:pointer;border:0.5px solid var(--border2);background:var(--bg2);color:var(--text2);font-family:'DM Sans',sans-serif;transition:all 0.15s;white-space:nowrap}
+.btn:hover{background:var(--bg3);color:var(--text)}
+.btn-gold{background:var(--gold-bg);border-color:var(--gold-border);color:var(--gold)}
+.btn-gold:hover{background:rgba(201,169,110,0.15)}
+.btn-red{background:rgba(224,92,92,0.08);border-color:rgba(224,92,92,0.25);color:var(--red)}
+
+/* CARDS */
+.card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.25rem}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.card-title{font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;display:flex;align-items:center;gap:6px}
+.card-title i{font-size:14px}
+.icon-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-size:18px;padding:2px;border-radius:6px;transition:color 0.1s;display:flex;align-items:center}
+.icon-btn:hover{color:var(--text)}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+
+/* STAT CARDS */
+.stat-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.25rem}
+.stat-card .num{font-size:26px;font-weight:300;color:var(--text)}
+.stat-card .lbl{font-size:11px;color:var(--text3);margin-top:4px;text-transform:uppercase;letter-spacing:0.5px}
+.stat-card .trend{font-size:12px;margin-top:6px;display:flex;align-items:center;gap:3px}
+.trend-up{color:var(--green)}.trend-down{color:var(--red)}
+
+/* TASKS */
+.task-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border);cursor:pointer}
+.task-row:last-of-type{border-bottom:none}
+.task-row.done .task-label{text-decoration:line-through;color:var(--text3)}
+.task-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;background:transparent;color:transparent}
+.task-row.done .task-check{background:var(--green);border-color:var(--green);color:#fff}
+.task-label{font-size:14px;color:var(--text);flex:1}
+.task-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px;padding:0 2px;opacity:0;transition:opacity 0.1s}
+.task-row:hover .task-del{opacity:1}
+.task-del:hover{color:var(--red)}
+.add-row{display:flex;gap:8px;margin-top:10px}
+.add-input{flex:1;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:8px 12px;font-size:13px;color:var(--text);outline:none;font-family:'DM Sans',sans-serif;transition:border-color 0.15s}
+.add-input:focus{border-color:var(--gold-border)}
+.add-input::placeholder{color:var(--text3)}
+.add-submit{background:var(--gold-bg);border:0.5px solid var(--gold-border);color:var(--gold);border-radius:var(--radius-sm);padding:8px 14px;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;transition:all 0.15s;white-space:nowrap}
+.add-submit:hover{background:rgba(201,169,110,0.15)}
+.progress-bg{height:3px;background:var(--bg3);border-radius:2px;margin-top:10px;overflow:hidden}
+.progress-fill{height:3px;background:var(--gold);border-radius:2px;transition:width 0.3s ease}
+
+/* HABITS */
+.habit-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border)}
+.habit-row:last-of-type{border-bottom:none}
+.habit-label{font-size:14px;color:var(--text);flex:1}
+.habit-dots{display:flex;gap:5px}
+.habit-dot{width:15px;height:15px;border-radius:50%;border:1.5px solid var(--border2);cursor:pointer;transition:all 0.12s;background:transparent}
+.habit-dot:hover{border-color:var(--text2)}
+.habit-dot.done{background:var(--green);border-color:var(--green)}
+.habit-dot.today:not(.done){border-color:var(--purple);box-shadow:0 0 0 2px rgba(139,127,212,0.2)}
+
+/* NOTES */
+.note-area{width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7;resize:none;outline:none;transition:border-color 0.15s}
+.note-area:focus{border-color:var(--gold-border)}
+.note-area::placeholder{color:var(--text3)}
+
+/* ETERNELL BRAND HEADER */
+.eternell-header{background:linear-gradient(135deg,#0d0d1a 0%,#12122a 40%,#0f1e3c 100%);border:0.5px solid rgba(201,169,110,0.2);border-radius:var(--radius);padding:2rem;margin-bottom:16px;position:relative;overflow:hidden}
+.eternell-header::before{content:'Et';position:absolute;right:2rem;top:50%;transform:translateY(-50%);font-family:'DM Serif Display',serif;font-size:130px;color:rgba(201,169,110,0.05);line-height:1;pointer-events:none}
+.eternell-header::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,169,110,0.3),transparent)}
+.et-title{font-family:'DM Serif Display',serif;font-size:32px;color:var(--gold);font-weight:400}
+.et-sub{font-size:13px;color:rgba(255,255,255,0.35);margin-top:6px}
+.et-tags{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.et-tag{padding:4px 12px;border-radius:var(--radius-pill);font-size:11px;border:0.5px solid var(--gold-border);color:var(--gold);background:var(--gold-bg)}
+
+/* TABS */
+.tab-bar{display:flex;gap:4px;margin-bottom:1.25rem;border-bottom:0.5px solid var(--border);padding-bottom:0}
+.tab{padding:8px 16px;font-size:13px;cursor:pointer;border:none;background:none;color:var(--text2);font-family:'DM Sans',sans-serif;border-bottom:2px solid transparent;margin-bottom:-0.5px;transition:all 0.15s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;font-size:13px}
+.data-table th{text-align:left;padding:8px 12px;font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:0.6px;border-bottom:0.5px solid var(--border)}
+.data-table td{padding:10px 12px;border-bottom:0.5px solid var(--border);color:var(--text2);vertical-align:middle}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:var(--bg3)}
+.data-table .num-cell{color:var(--text);font-weight:500}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:var(--radius-pill);font-size:11px;font-weight:500}
+.badge-green{background:rgba(76,175,125,0.12);color:var(--green)}
+.badge-gold{background:var(--gold-bg);color:var(--gold)}
+.badge-red{background:rgba(224,92,92,0.1);color:var(--red)}
+.badge-blue{background:rgba(91,141,238,0.1);color:var(--blue)}
+.badge-orange{background:rgba(232,148,74,0.1);color:var(--orange)}
+.badge-grey{background:var(--bg3);color:var(--text3)}
+
+/* FORM */
+.form-row{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.form-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px}
+.form-input{background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:9px 12px;font-size:13px;color:var(--text);outline:none;font-family:'DM Sans',sans-serif;width:100%;transition:border-color 0.15s}
+.form-input:focus{border-color:var(--gold-border)}
+.form-input::placeholder{color:var(--text3)}
+select.form-input option{background:var(--bg2)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;display:none;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--radius);padding:1.75rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto}
+.modal-title{font-size:16px;font-weight:500;margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:1.25rem}
+
+/* CALENDAR */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-header{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
+.cal-day-name{text-align:center;font-size:10px;color:var(--text3);padding:4px 0;text-transform:uppercase;letter-spacing:0.5px}
+.cal-day{min-height:80px;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:6px;cursor:pointer;transition:border-color 0.15s;position:relative}
+.cal-day:hover{border-color:var(--border2)}
+.cal-day.today{border-color:var(--gold-border)}
+.cal-day.other-month{opacity:0.35}
+.cal-day-num{font-size:11px;color:var(--text3);margin-bottom:4px}
+.cal-day.today .cal-day-num{color:var(--gold);font-weight:600}
+.cal-event{font-size:10px;padding:2px 5px;border-radius:4px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal-event.type-drop{background:rgba(201,169,110,0.15);color:var(--gold)}
+.cal-event.type-ad{background:rgba(91,141,238,0.15);color:var(--blue)}
+.cal-event.type-content{background:rgba(76,175,125,0.15);color:var(--green)}
+.cal-event.type-other{background:var(--bg4);color:var(--text2)}
+.cal-nav{display:flex;align-items:center;gap:12px;margin-bottom:1rem}
+.cal-month{font-size:15px;font-weight:500}
+
+/* CHART CONTAINER */
+.chart-wrap{position:relative;height:200px}
+
+/* AI */
+.ai-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.ai-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border:0.5px solid var(--border2);border-radius:var(--radius-pill);font-size:12px;color:var(--text2);cursor:pointer;transition:all 0.12s;font-family:'DM Sans',sans-serif;background:none}
+.ai-chip:hover{border-color:var(--gold);color:var(--gold)}
+.ai-inputbar{display:flex;gap:8px;align-items:center}
+.ai-input{flex:1;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius-pill);padding:11px 18px;font-size:14px;color:var(--text);outline:none;font-family:'DM Sans',sans-serif;transition:border-color 0.15s}
+.ai-input:focus{border-color:var(--gold-border)}
+.ai-input::placeholder{color:var(--text3)}
+.ai-send{background:var(--gold);color:#1a1a2e;border:none;border-radius:var(--radius-pill);padding:11px 20px;cursor:pointer;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px;transition:opacity 0.15s}
+.ai-send:hover{opacity:0.85}
+
+/* LOADING */
+.loading-overlay{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:12px}
+.loading-spinner{width:32px;height:32px;border:2px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:13px;color:var(--text3)}
+
+/* TOAST */
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--radius);padding:10px 16px;font-size:13px;color:var(--text);display:flex;align-items:center;gap:8px;opacity:0;transform:translateY(8px);transition:all 0.2s;pointer-events:none;z-index:200}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:2rem;color:var(--text3);font-size:13px}
+.empty i{font-size:32px;display:block;margin-bottom:8px;opacity:0.4}
+
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+@media(max-width:900px){
+  .sidebar{width:56px}
+  .brand-text,.nav-item span,.nav-section,.clock-widget,.sync-status{display:none}
+  .nav-item{justify-content:center;padding:12px}
+  .main{margin-left:56px;padding:1rem}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .form-grid,.form-grid-3{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Eternell Hub lädt...</div>
+</div>
+
+<div class="layout">
+<nav class="sidebar">
+  <div class="brand-logo">
+    <div class="brand-mark">Et</div>
+    <div class="brand-text">
+      <div class="brand-name">Eternell</div>
+      <div class="brand-tagline">Business Hub</div>
+    </div>
+  </div>
+  <div class="nav">
+    <div class="nav-section">Main</div>
+    <button class="nav-item active" onclick="showPage('dashboard')"><i class="ti ti-layout-dashboard"></i><span>Dashboard</span></button>
+    <button class="nav-item" onclick="showPage('tasks')"><i class="ti ti-checkbox"></i><span>Aufgaben</span></button>
+    <button class="nav-item" onclick="showPage('habits')"><i class="ti ti-flame"></i><span>Habits</span></button>
+    <button class="nav-item" onclick="showPage('notes')"><i class="ti ti-notes"></i><span>Notizen</span></button>
+    <div class="nav-section">Eternell</div>
+    <button class="nav-item" onclick="showPage('et-overview')"><i class="ti ti-brand-abstract"></i><span>Übersicht</span></button>
+    <button class="nav-item" onclick="showPage('et-shopify')"><i class="ti ti-shopping-bag"></i><span>Shopify</span></button>
+    <button class="nav-item" onclick="showPage('et-finances')"><i class="ti ti-chart-bar"></i><span>Finanzen</span></button>
+    <button class="nav-item" onclick="showPage('et-drops')"><i class="ti ti-package"></i><span>Drops</span></button>
+    <button class="nav-item" onclick="showPage('et-campaigns')"><i class="ti ti-speakerphone"></i><span>Kampagnen</span></button>
+    <button class="nav-item" onclick="showPage('et-calendar')"><i class="ti ti-calendar-event"></i><span>Kalender</span></button>
+    <div class="nav-section">Tools</div>
+    <button class="nav-item" onclick="showPage('ai')"><i class="ti ti-sparkles"></i><span>KI-Assistent</span></button>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="sync-status"><span class="sync-dot" id="sync-dot"></span><span id="sync-text">Verbinde...</span></div>
+    <div class="clock-widget">
+      <div class="clock-time" id="clock">--:--</div>
+      <div class="clock-date" id="dateline">--</div>
+      <div class="clock-weather"><i class="ti ti-cloud"></i><span id="weather-txt">lädt...</span></div>
+    </div>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- ===== DASHBOARD ===== -->
+<div class="page active" id="page-dashboard">
+  <div class="topbar">
+    <div><div class="page-title" id="greet-title">Guten Morgen</div><div class="page-sub">Deine tägliche Übersicht</div></div>
+  </div>
+  <div class="grid-4">
+    <div class="stat-card"><div class="num" id="s-done">–</div><div class="lbl">Heute erledigt</div></div>
+    <div class="stat-card"><div class="num" id="s-open">–</div><div class="lbl">Noch offen</div></div>
+    <div class="stat-card"><div class="num" id="s-streak">–</div><div class="lbl">Habit Streak</div></div>
+    <div class="stat-card"><div class="num" id="s-revenue">–</div><div class="lbl">Umsatz (Monat)</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><span class="card-title"><i class="ti ti-sun"></i>Tagesaufgaben</span><button class="icon-btn" onclick="toggleAdd('daily')"><i class="ti ti-plus"></i></button></div>
+      <div id="daily-list"></div>
+      <div class="add-row" id="add-daily-row" style="display:none">
+        <input class="add-input" id="add-daily-input" placeholder="Neue Aufgabe..." onkeydown="if(event.key==='Enter')addTask('daily')">
+        <button class="add-submit" onclick="addTask('daily')">Add</button>
+      </div>
+      <div class="progress-bg"><div class="progress-fill" id="daily-prog"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title"><i class="ti ti-flame"></i>Habits heute</span></div>
+      <div id="habits-dash"></div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><span class="card-title"><i class="ti ti-shopping-bag"></i>Shopify Snapshot</span><button class="btn btn-gold" style="font-size:11px;padding:5px 10px" onclick="showPage('et-shopify')">Details</button></div>
+      <div id="dash-shopify-snap"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title"><i class="ti ti-notes"></i>Schnellnotiz</span></div>
+      <textarea class="note-area" id="quick-note" placeholder="Gedanken, Ideen, Tasks..." oninput="debounceNote()" style="min-height:90px"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TASKS ===== -->
+<div class="page" id="page-tasks">
+  <div class="topbar"><div><div class="page-title">Aufgaben</div><div class="page-sub">Tages- & Wochenaufgaben</div></div></div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><span class="card-title"><i class="ti ti-sun"></i>Täglich</span><button class="icon-btn" onclick="toggleAdd('daily2')"><i class="ti ti-plus"></i></button></div>
+      <div id="daily-list2"></div>
+      <div class="add-row" id="add-daily2-row" style="display:none">
+        <input class="add-input" id="add-daily2-input" placeholder="Neue Aufgabe..." onkeydown="if(event.key==='Enter')addTask('daily2')">
+        <button class="add-submit" onclick="addTask('daily2')">Add</button>
+      </div>
+      <div class="progress-bg"><div class="progress-fill" id="daily2-prog"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title"><i class="ti ti-calendar-week"></i>Wöchentlich</span><button class="icon-btn" onclick="toggleAdd('weekly')"><i class="ti ti-plus"></i></button></div>
+      <div id="weekly-list"></div>
+      <div class="add-row" id="add-weekly-row" style="display:none">
+        <input class="add-input" id="add-weekly-input" placeholder="Neue Aufgabe..." onkeydown="if(event.key==='Enter')addTask('weekly')">
+        <button class="add-submit" onclick="addTask('weekly')">Add</button>
+      </div>
+      <div class="progress-bg"><div class="progress-fill" id="weekly-prog"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HABITS ===== -->
+<div class="page" id="page-habits">
+  <div class="topbar">
+    <div><div class="page-title">Habits</div><div class="page-sub">Wöchentliche Gewohnheiten</div></div>
+    <button class="btn btn-gold" onclick="toggleAdd('habit')"><i class="ti ti-plus"></i>Neuer Habit</button>
+  </div>
+  <div class="card">
+    <div style="display:flex;justify-content:flex-end;gap:5px;margin-bottom:10px">
+      <span style="font-size:10px;color:var(--text3);flex:1">Klicke Punkte zum Abhaken</span>
+      <span style="font-size:10px;color:var(--text3);width:15px;text-align:center">M</span>
+      <span style="font-size:10px;color:var(--text3);width:15px;text-align:center">D</span>
+      <span style="font-size:10px;color:var(--text3);width:15px;text-align:center">M</span>
+      <span style="font-size:10px;color:var(--text3);width:15px;text-align:center">D</span>
+      <span style="font-size:10px;color:var(--text3);width:15px;text-align:center">F</span>
+      <span style="font-size:10px;color:var(--text3);width:15px;text-align:center">S</span>
+      <span style="font-size:10px;color:var(--text3);width:15px;text-align:center">S</span>
+      <span style="width:22px"></span>
+    </div>
+    <div id="habits-full"></div>
+    <div class="add-row" id="add-habit-row" style="display:none;margin-top:12px">
+      <input class="add-input" id="add-habit-input" placeholder="Neuer Habit..." onkeydown="if(event.key==='Enter')addHabit()">
+      <button class="add-submit" onclick="addHabit()">Hinzufügen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== NOTES ===== -->
+<div class="page" id="page-notes">
+  <div class="topbar"><div><div class="page-title">Notizen</div><div class="page-sub">Ideen & Gedanken</div></div></div>
+  <div class="card"><textarea class="note-area" id="notes-full" placeholder="Schreib alles rein – Ideen, Ziele, Links..." oninput="debounceNote()" style="min-height:420px"></textarea></div>
+</div>
+
+<!-- ===== ETERNELL ÜBERSICHT ===== -->
+<div class="page" id="page-et-overview">
+  <div class="eternell-header">
+    <div class="et-title">Eternell</div>
+    <div class="et-sub">Business Command Center</div>
+    <div class="et-tags"><span class="et-tag">Fashion</span><span class="et-tag">E-Commerce</span><span class="et-tag">Streetwear</span></div>
+  </div>
+  <div class="grid-4" id="et-kpi-row">
+    <div class="stat-card"><div class="num" id="kpi-revenue">–</div><div class="lbl">Gesamtumsatz</div></div>
+    <div class="stat-card"><div class="num" id="kpi-orders">–</div><div class="lbl">Orders gesamt</div></div>
+    <div class="stat-card"><div class="num" id="kpi-profit">–</div><div class="lbl">Gewinn</div></div>
+    <div class="stat-card"><div class="num" id="kpi-aov">–</div><div class="lbl">Ø Bestellwert</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><span class="card-title"><i class="ti ti-chart-line"></i>Umsatz Verlauf</span></div>
+      <div class="chart-wrap"><canvas id="revenueChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title"><i class="ti ti-package"></i>Nächster Drop</span><button class="btn btn-gold" style="font-size:11px;padding:5px 10px" onclick="showPage('et-drops')">Details</button></div>
+      <div id="next-drop-preview"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SHOPIFY ===== -->
+<div class="page" id="page-et-shopify">
+  <div class="topbar">
+    <div><div class="page-title">Shopify Daten</div><div class="page-sub">Umsatz, Orders & Produkte</div></div>
+    <button class="btn btn-gold" onclick="openModal('modal-shopify-entry')"><i class="ti ti-plus"></i>Eintrag hinzufügen</button>
+  </div>
+  <div class="tab-bar">
+    <button class="tab active" onclick="switchShopifyTab('monthly')">Monatlich</button>
+    <button class="tab" onclick="switchShopifyTab('products')">Produkte</button>
+  </div>
+  <div id="shopify-tab-monthly">
+    <div class="grid-3" style="margin-bottom:16px">
+      <div class="stat-card"><div class="num" id="sh-revenue-month">–</div><div class="lbl">Umsatz (akt. Monat)</div></div>
+      <div class="stat-card"><div class="num" id="sh-orders-month">–</div><div class="lbl">Orders (akt. Monat)</div></div>
+      <div class="stat-card"><div class="num" id="sh-aov-month">–</div><div class="lbl">Ø Bestellwert</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title"><i class="ti ti-table"></i>Monatliche Einträge</span></div>
+      <div style="overflow-x:auto"><table class="data-table" id="shopify-table"><thead><tr><th>Monat</th><th>Umsatz</th><th>Orders</th><th>Ø Wert</th><th>Neue Kunden</th><th>Notiz</th><th></th></tr></thead><tbody id="shopify-tbody"></tbody></table></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="card-header"><span class="card-title"><i class="ti ti-chart-bar"></i>Umsatz Chart</span></div>
+      <div class="chart-wrap"><canvas id="shopifyChart"></canvas></div>
+    </div>
+  </div>
+  <div id="shopify-tab-products" style="display:none">
+    <div class="topbar" style="margin-bottom:1rem">
+      <div></div>
+      <button class="btn btn-gold" onclick="openModal('modal-product-entry')"><i class="ti ti-plus"></i>Produkt hinzufügen</button>
+    </div>
+    <div class="card">
+      <div style="overflow-x:auto"><table class="data-table"><thead><tr><th>Produkt</th><th>Bestand</th><th>Preis</th><th>Verkauft</th><th>Umsatz</th><th>Status</th><th></th></tr></thead><tbody id="products-tbody"></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FINANZEN ===== -->
+<div class="page" id="page-et-finances">
+  <div class="topbar">
+    <div><div class="page-title">Finanzen</div><div class="page-sub">Ausgaben, Bestand & Gewinn</div></div>
+    <button class="btn btn-gold" onclick="openModal('modal-finance-entry')"><i class="ti ti-plus"></i>Eintrag hinzufügen</button>
+  </div>
+  <div class="grid-4">
+    <div class="stat-card"><div class="num" id="fin-revenue">–</div><div class="lbl">Einnahmen</div></div>
+    <div class="stat-card"><div class="num" id="fin-expenses">–</div><div class="lbl">Ausgaben</div></div>
+    <div class="stat-card"><div class="num" id="fin-profit">–</div><div class="lbl">Gewinn</div></div>
+    <div class="stat-card"><div class="num" id="fin-stock-val">–</div><div class="lbl">Bestandswert</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><span class="card-title"><i class="ti ti-table"></i>Ausgaben</span></div>
+      <div style="overflow-x:auto"><table class="data-table"><thead><tr><th>Datum</th><th>Kategorie</th><th>Beschreibung</th><th>Betrag</th><th></th></tr></thead><tbody id="expenses-tbody"></tbody></table></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title"><i class="ti ti-chart-pie"></i>Ausgaben nach Kategorie</span></div>
+      <div class="chart-wrap"><canvas id="expensesChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DROPS ===== -->
+<div class="page" id="page-et-drops">
+  <div class="topbar">
+    <div><div class="page-title">Drop Planung</div><div class="page-sub">Nächste Releases & Kollektionen</div></div>
+    <button class="btn btn-gold" onclick="openModal('modal-drop-entry')"><i class="ti ti-plus"></i>Drop hinzufügen</button>
+  </div>
+  <div id="drops-container"></div>
+</div>
+
+<!-- ===== KAMPAGNEN ===== -->
+<div class="page" id="page-et-campaigns">
+  <div class="topbar">
+    <div><div class="page-title">Werbe-Kampagnen</div><div class="page-sub">Planung & Tracking</div></div>
+    <button class="btn btn-gold" onclick="openModal('modal-campaign-entry')"><i class="ti ti-plus"></i>Kampagne hinzufügen</button>
+  </div>
+  <div class="grid-3" style="margin-bottom:16px">
+    <div class="stat-card"><div class="num" id="camp-active">–</div><div class="lbl">Aktive Kampagnen</div></div>
+    <div class="stat-card"><div class="num" id="camp-budget">–</div><div class="lbl">Budget gesamt</div></div>
+    <div class="stat-card"><div class="num" id="camp-spent">–</div><div class="lbl">Ausgegeben</div></div>
+  </div>
+  <div class="card">
+    <div style="overflow-x:auto"><table class="data-table"><thead><tr><th>Kampagne</th><th>Kanal</th><th>Budget</th><th>Ausgegeben</th><th>Klicks</th><th>Conversions</th><th>Status</th><th></th></tr></thead><tbody id="campaigns-tbody"></tbody></table></div>
+  </div>
+</div>
+
+<!-- ===== CONTENT KALENDER ===== -->
+<div class="page" id="page-et-calendar">
+  <div class="topbar">
+    <div><div class="page-title">Content Kalender</div><div class="page-sub">Drops, Ads & Content Planung</div></div>
+    <button class="btn btn-gold" onclick="openModal('modal-event-entry')"><i class="ti ti-plus"></i>Event hinzufügen</button>
+  </div>
+  <div class="card">
+    <div class="cal-nav">
+      <button class="icon-btn" onclick="changeMonth(-1)"><i class="ti ti-chevron-left"></i></button>
+      <span class="cal-month" id="cal-month-label">–</span>
+      <button class="icon-btn" onclick="changeMonth(1)"><i class="ti ti-chevron-right"></i></button>
+      <div style="margin-left:auto;display:flex;gap:8px;font-size:11px;color:var(--text3)">
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:rgba(201,169,110,0.4);margin-right:4px"></span>Drop</span>
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:rgba(91,141,238,0.4);margin-right:4px"></span>Ad</span>
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:rgba(76,175,125,0.4);margin-right:4px"></span>Content</span>
+      </div>
+    </div>
+    <div class="cal-header">
+      <div class="cal-day-name">Mo</div><div class="cal-day-name">Di</div><div class="cal-day-name">Mi</div>
+      <div class="cal-day-name">Do</div><div class="cal-day-name">Fr</div><div class="cal-day-name">Sa</div><div class="cal-day-name">So</div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+  </div>
+</div>
+
+<!-- ===== AI ===== -->
+<div class="page" id="page-ai">
+  <div class="topbar"><div><div class="page-title">KI-Assistent</div><div class="page-sub">Öffnet Claude.ai</div></div></div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="ai-chips">
+      <button class="ai-chip" onclick="openClaude('Erstelle mir eine Werbekampagne Strategie für eine Streetwear Marke namens Eternell')"><i class="ti ti-speakerphone"></i>Kampagnenstrategie</button>
+      <button class="ai-chip" onclick="openClaude('Schreib mir einen Content Plan für Instagram für die nächsten 4 Wochen für Eternell Streetwear')"><i class="ti ti-calendar"></i>Content Plan</button>
+      <button class="ai-chip" onclick="openClaude('Wie kann ich meinen Shopify Store für Eternell optimieren um mehr Umsatz zu machen?')"><i class="ti ti-shopping-bag"></i>Shop optimieren</button>
+      <button class="ai-chip" onclick="openClaude('Schreib mir einen Produkt Drop Announcement Text für Instagram')"><i class="ti ti-package"></i>Drop Announcement</button>
+      <button class="ai-chip" onclick="openClaude('Analysiere meine Ausgaben und gib mir Tipps wie ich Kosten sparen kann als kleines Fashion Label')"><i class="ti ti-chart-bar"></i>Kosten analysieren</button>
+      <button class="ai-chip" onclick="openClaude('Erstelle eine Facebook/Instagram Ad Copy für Eternell Streetwear')"><i class="ti ti-ad"></i>Ad Copy schreiben</button>
+    </div>
+    <div class="ai-inputbar">
+      <input class="ai-input" id="ai-input" placeholder="Frag etwas über Eternell..." onkeydown="if(event.key==='Enter')sendAI()">
+      <button class="ai-send" onclick="sendAI()"><i class="ti ti-send" style="font-size:15px"></i>Fragen</button>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<!-- ===== MODALS ===== -->
+
+<!-- Shopify Eintrag -->
+<div class="modal-overlay" id="modal-shopify-entry">
+  <div class="modal">
+    <div class="modal-title">Shopify Eintrag <button class="icon-btn" onclick="closeModal('modal-shopify-entry')"><i class="ti ti-x"></i></button></div>
+    <div class="form-grid">
+      <div class="form-row"><label class="form-label">Monat</label><input class="form-input" type="month" id="sh-month"></div>
+      <div class="form-row"><label class="form-label">Umsatz (€)</label><input class="form-input" type="number" id="sh-revenue" placeholder="0.00"></div>
+      <div class="form-row"><label class="form-label">Anzahl Orders</label><input class="form-input" type="number" id="sh-orders" placeholder="0"></div>
+      <div class="form-row"><label class="form-label">Neue Kunden</label><input class="form-input" type="number" id="sh-new-customers" placeholder="0"></div>
+    </div>
+    <div class="form-row"><label class="form-label">Notiz</label><input class="form-input" id="sh-note" placeholder="optional..."></div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal('modal-shopify-entry')">Abbrechen</button><button class="btn btn-gold" onclick="saveShopifyEntry()">Speichern</button></div>
+  </div>
+</div>
+
+<!-- Produkt -->
+<div class="modal-overlay" id="modal-product-entry">
+  <div class="modal">
+    <div class="modal-title">Produkt hinzufügen <button class="icon-btn" onclick="closeModal('modal-product-entry')"><i class="ti ti-x"></i></button></div>
+    <div class="form-row"><label class="form-label">Produktname</label><input class="form-input" id="prod-name" placeholder="z.B. Oversized Hoodie Black"></div>
+    <div class="form-grid-3">
+      <div class="form-row"><label class="form-label">Preis (€)</label><input class="form-input" type="number" id="prod-price" placeholder="0.00"></div>
+      <div class="form-row"><label class="form-label">Bestand</label><input class="form-input" type="number" id="prod-stock" placeholder="0"></div>
+      <div class="form-row"><label class="form-label">Verkauft</label><input class="form-input" type="number" id="prod-sold" placeholder="0"></div>
+    </div>
+    <div class="form-row"><label class="form-label">Status</label>
+      <select class="form-input" id="prod-status"><option value="active">Aktiv</option><option value="sold_out">Ausverkauft</option><option value="coming_soon">Coming Soon</option><option value="archived">Archiviert</option></select>
+    </div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal('modal-product-entry')">Abbrechen</button><button class="btn btn-gold" onclick="saveProduct()">Speichern</button></div>
+  </div>
+</div>
+
+<!-- Finanzen -->
+<div class="modal-overlay" id="modal-finance-entry">
+  <div class="modal">
+    <div class="modal-title">Ausgabe hinzufügen <button class="icon-btn" onclick="closeModal('modal-finance-entry')"><i class="ti ti-x"></i></button></div>
+    <div class="form-grid">
+      <div class="form-row"><label class="form-label">Datum</label><input class="form-input" type="date" id="fin-date"></div>
+      <div class="form-row"><label class="form-label">Betrag (€)</label><input class="form-input" type="number" id="fin-amount" placeholder="0.00"></div>
+    </div>
+    <div class="form-row"><label class="form-label">Kategorie</label>
+      <select class="form-input" id="fin-category">
+        <option value="Produktion">Produktion</option>
+        <option value="Marketing">Marketing</option>
+        <option value="Versand">Versand</option>
+        <option value="Software">Software</option>
+        <option value="Fotografie">Fotografie</option>
+        <option value="Sonstiges">Sonstiges</option>
+      </select>
+    </div>
+    <div class="form-row"><label class="form-label">Beschreibung</label><input class="form-input" id="fin-desc" placeholder="Wofür war die Ausgabe?"></div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal('modal-finance-entry')">Abbrechen</button><button class="btn btn-gold" onclick="saveFinanceEntry()">Speichern</button></div>
+  </div>
+</div>
+
+<!-- Drop -->
+<div class="modal-overlay" id="modal-drop-entry">
+  <div class="modal">
+    <div class="modal-title">Drop hinzufügen <button class="icon-btn" onclick="closeModal('modal-drop-entry')"><i class="ti ti-x"></i></button></div>
+    <div class="form-row"><label class="form-label">Drop Name</label><input class="form-input" id="drop-name" placeholder="z.B. Summer Collection 2025"></div>
+    <div class="form-grid">
+      <div class="form-row"><label class="form-label">Drop Datum</label><input class="form-input" type="date" id="drop-date"></div>
+      <div class="form-row"><label class="form-label">Status</label>
+        <select class="form-input" id="drop-status"><option value="planning">Planung</option><option value="production">Produktion</option><option value="ready">Bereit</option><option value="live">Live</option><option value="sold_out">Ausverkauft</option></select>
+      </div>
+    </div>
+    <div class="form-row"><label class="form-label">Produkte (kommagetrennt)</label><input class="form-input" id="drop-products" placeholder="Hoodie, T-Shirt, Cap..."></div>
+    <div class="form-row"><label class="form-label">Budget (€)</label><input class="form-input" type="number" id="drop-budget" placeholder="0.00"></div>
+    <div class="form-row"><label class="form-label">Notizen / Checklist</label><textarea class="form-input note-area" id="drop-notes" placeholder="Aufgaben, Ideen, Links..." style="min-height:80px"></textarea></div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal('modal-drop-entry')">Abbrechen</button><button class="btn btn-gold" onclick="saveDrop()">Speichern</button></div>
+  </div>
+</div>
+
+<!-- Kampagne -->
+<div class="modal-overlay" id="modal-campaign-entry">
+  <div class="modal">
+    <div class="modal-title">Kampagne hinzufügen <button class="icon-btn" onclick="closeModal('modal-campaign-entry')"><i class="ti ti-x"></i></button></div>
+    <div class="form-row"><label class="form-label">Kampagnenname</label><input class="form-input" id="camp-name" placeholder="z.B. Summer Drop Launch"></div>
+    <div class="form-grid">
+      <div class="form-row"><label class="form-label">Kanal</label>
+        <select class="form-input" id="camp-channel"><option>Instagram</option><option>TikTok</option><option>Facebook</option><option>Google</option><option>Pinterest</option><option>Influencer</option><option>Sonstiges</option></select>
+      </div>
+      <div class="form-row"><label class="form-label">Status</label>
+        <select class="form-input" id="camp-status"><option value="planned">Geplant</option><option value="active">Aktiv</option><option value="paused">Pausiert</option><option value="done">Abgeschlossen</option></select>
+      </div>
+    </div>
+    <div class="form-grid-3">
+      <div class="form-row"><label class="form-label">Budget (€)</label><input class="form-input" type="number" id="camp-budget-inp" placeholder="0"></div>
+      <div class="form-row"><label class="form-label">Ausgegeben (€)</label><input class="form-input" type="number" id="camp-spent-inp" placeholder="0"></div>
+      <div class="form-row"><label class="form-label">Klicks</label><input class="form-input" type="number" id="camp-clicks" placeholder="0"></div>
+    </div>
+    <div class="form-row"><label class="form-label">Conversions</label><input class="form-input" type="number" id="camp-conv" placeholder="0"></div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal('modal-campaign-entry')">Abbrechen</button><button class="btn btn-gold" onclick="saveCampaign()">Speichern</button></div>
+  </div>
+</div>
+
+<!-- Kalender Event -->
+<div class="modal-overlay" id="modal-event-entry">
+  <div class="modal">
+    <div class="modal-title">Event hinzufügen <button class="icon-btn" onclick="closeModal('modal-event-entry')"><i class="ti ti-x"></i></button></div>
+    <div class="form-row"><label class="form-label">Titel</label><input class="form-input" id="event-title" placeholder="z.B. Summer Drop Live"></div>
+    <div class="form-grid">
+      <div class="form-row"><label class="form-label">Datum</label><input class="form-input" type="date" id="event-date"></div>
+      <div class="form-row"><label class="form-label">Typ</label>
+        <select class="form-input" id="event-type"><option value="drop">Drop</option><option value="ad">Ad / Kampagne</option><option value="content">Content</option><option value="other">Sonstiges</option></select>
+      </div>
+    </div>
+    <div class="form-row"><label class="form-label">Notiz</label><input class="form-input" id="event-note" placeholder="optional..."></div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal('modal-event-entry')">Abbrechen</button><button class="btn btn-gold" onclick="saveEvent()">Speichern</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><i class="ti ti-check" id="toast-icon"></i><span id="toast-msg">Gespeichert</span></div>
+
+<script>
+const SUPABASE_URL='https://lckkhhyuvkeyclfluisi.supabase.co';
+const SUPABASE_KEY='sb_publishable_ZcIqZJfpEQ4p3k74Fx0G9w_lrlk6Yl3';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+const TODAY=new Date().toDateString();
+const WEEK=(()=>{const d=new Date();return `W${Math.ceil((d-new Date(d.getFullYear(),0,1))/604800000)}-${d.getFullYear()}`;})();
+
+let tasks=[],habits=[],noteContent='',brandNoteContent='';
+let shopifyData=[],products=[],finances=[],drops=[],campaigns=[],calEvents=[];
+let noteTimer=null,brandTimer=null;
+let charts={};
+let calYear=new Date().getFullYear(),calMonth=new Date().getMonth();
+let editingId=null;
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmt(n){return '€'+Number(n||0).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function setSyncStatus(on){document.getElementById('sync-dot').className='sync-dot'+(on?'':' off');document.getElementById('sync-text').textContent=on?'Sync aktiv':'Offline';}
+
+async function loadAll(){
+  try{
+    const [tr,hr,nr,sr,pr,fr,dr,cr,er]=await Promise.all([
+      sb.from('tasks').select('*'),
+      sb.from('habits').select('*'),
+      sb.from('notes').select('*'),
+      sb.from('shopify_data').select('*').order('month',{ascending:true}),
+      sb.from('products').select('*'),
+      sb.from('finances').select('*').order('date',{ascending:false}),
+      sb.from('drops').select('*').order('drop_date',{ascending:true}),
+      sb.from('campaigns').select('*'),
+      sb.from('cal_events').select('*').order('event_date',{ascending:true})
+    ]);
+    tasks=tr.data||[];habits=hr.data||[];
+    const notes_main=(nr.data||[]).find(n=>n.id==='main');
+    const notes_brand=(nr.data||[]).find(n=>n.id==='brand');
+    noteContent=notes_main?.content||'';brandNoteContent=notes_brand?.content||'';
+    shopifyData=sr.data||[];products=pr.data||[];finances=fr.data||[];
+    drops=dr.data||[];campaigns=cr.data||[];calEvents=er.data||[];
+    await rollover();
+    renderAll();setSyncStatus(true);
+    document.getElementById('loading').style.display='none';
+  }catch(e){
+    console.error(e);setSyncStatus(false);
+    document.getElementById('loading').style.display='none';
+    showToast('Offline Modus',true);
+  }
+}
+
+async function rollover(){
+  const lastDay=tasks.find(t=>t.id==='__lastday')?.text;
+  const lastWeek=tasks.find(t=>t.id==='__lastweek')?.text;
+  if(lastDay!==TODAY){
+    for(const t of tasks.filter(t=>t.type==='daily')){await sb.from('tasks').update({done:false}).eq('id',t.id);t.done=false;}
+    await sb.from('tasks').upsert({id:'__lastday',type:'meta',text:TODAY,done:false});
+    const m=tasks.find(t=>t.id==='__lastday');if(m)m.text=TODAY;else tasks.push({id:'__lastday',type:'meta',text:TODAY,done:false});
+  }
+  if(lastWeek!==WEEK){
+    for(const t of tasks.filter(t=>t.type==='weekly')){await sb.from('tasks').update({done:false}).eq('id',t.id);t.done=false;}
+    await sb.from('tasks').upsert({id:'__lastweek',type:'meta',text:WEEK,done:false});
+    const m=tasks.find(t=>t.id==='__lastweek');if(m)m.text=WEEK;else tasks.push({id:'__lastweek',type:'meta',text:WEEK,done:false});
+  }
+}
+
+function renderAll(){renderTasks();renderHabits();renderShopify();renderProducts();renderFinances();renderDrops();renderCampaigns();renderCalendar();renderStats();renderNotesUI();}
+
+function renderTasks(){
+  ['daily','daily2','weekly'].forEach(type=>{
+    const base=type.replace('2','');
+    const ids=type==='daily'?['daily-list','daily-prog']:type==='daily2'?['daily-list2','daily2-prog']:['weekly-list','weekly-prog'];
+    const arr=tasks.filter(t=>t.type===base);
+    const el=document.getElementById(ids[0]);if(!el)return;
+    el.innerHTML=arr.map(t=>`<div class="task-row${t.done?' done':''}" onclick="toggleTask('${t.id}')"><div class="task-check">${t.done?'<i class="ti ti-check" style="font-size:11px"></i>':''}</div><span class="task-label">${esc(t.text)}</span><button class="task-del" onclick="event.stopPropagation();deleteTask('${t.id}')"><i class="ti ti-x"></i></button></div>`).join('')||'<p class="empty" style="padding:8px 0"><i class="ti ti-check"></i>Keine Aufgaben</p>';
+    const p=document.getElementById(ids[1]);if(p){const d=arr.filter(t=>t.done).length;p.style.width=(arr.length?Math.round(d/arr.length*100):0)+'%';}
+  });
+}
+
+function renderHabits(){
+  const now=new Date(),weekStart=new Date(now);weekStart.setDate(now.getDate()-((now.getDay()+6)%7));
+  ['habits-dash','habits-full'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    const full=id==='habits-full';
+    if(!habits.length){el.innerHTML='<p class="empty">Noch keine Habits</p>';return;}
+    el.innerHTML=habits.map(h=>{
+      let dots='';
+      for(let i=0;i<7;i++){const d=new Date(weekStart);d.setDate(weekStart.getDate()+i);const key=d.toDateString();const done=(h.days||{})[key];const isToday=key===TODAY;dots+=`<div class="habit-dot${done?' done':''}${isToday&&!done?' today':''}" onclick="toggleHabit('${h.id}','${key}')"></div>`;}
+      return `<div class="habit-row"><span class="habit-label">${esc(h.text)}</span><div class="habit-dots">${dots}</div>${full?`<button class="icon-btn" onclick="deleteHabit('${h.id}')" style="font-size:14px;padding:0 2px"><i class="ti ti-x"></i></button>`:''}</div>`;
+    }).join('');
+  });
+}
+
+function renderShopify(){
+  const tbody=document.getElementById('shopify-tbody');if(!tbody)return;
+  const now=new Date();const curMonth=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const curData=shopifyData.find(d=>d.month===curMonth);
+  const revM=curData?.revenue||0,ordM=curData?.orders||0;
+  const setV=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  setV('sh-revenue-month',fmt(revM));setV('sh-orders-month',ordM);setV('sh-aov-month',ordM?fmt(revM/ordM):'–');
+  tbody.innerHTML=shopifyData.map(d=>`<tr><td>${d.month}</td><td class="num-cell">${fmt(d.revenue)}</td><td>${d.orders}</td><td class="num-cell">${d.orders?fmt(d.revenue/d.orders):'–'}</td><td>${d.new_customers||0}</td><td style="color:var(--text3)">${esc(d.note||'')}</td><td><button class="icon-btn" onclick="deleteShopifyEntry('${d.id}')" style="font-size:14px"><i class="ti ti-trash" style="color:var(--red)"></i></button></td></tr>`).join('')||'<tr><td colspan="7" class="empty">Noch keine Einträge</td></tr>';
+  updateShopifyChart();updateDashboardSnap();
+}
+
+function updateDashboardSnap(){
+  const el=document.getElementById('dash-shopify-snap');if(!el)return;
+  const totalRev=shopifyData.reduce((s,d)=>s+Number(d.revenue||0),0);
+  const totalOrd=shopifyData.reduce((s,d)=>s+Number(d.orders||0),0);
+  el.innerHTML=`<div class="grid-2" style="margin-bottom:0"><div class="stat-card" style="background:var(--bg3)"><div class="num" style="font-size:20px">${fmt(totalRev)}</div><div class="lbl">Gesamtumsatz</div></div><div class="stat-card" style="background:var(--bg3)"><div class="num" style="font-size:20px">${totalOrd}</div><div class="lbl">Orders gesamt</div></div></div>`;
+}
+
+function renderProducts(){
+  const tbody=document.getElementById('products-tbody');if(!tbody)return;
+  const statusMap={active:'<span class="badge badge-green">Aktiv</span>',sold_out:'<span class="badge badge-red">Ausverkauft</span>',coming_soon:'<span class="badge badge-blue">Coming Soon</span>',archived:'<span class="badge badge-grey">Archiviert</span>'};
+  tbody.innerHTML=products.map(p=>`<tr><td class="num-cell">${esc(p.name)}</td><td>${p.stock||0}</td><td class="num-cell">${fmt(p.price)}</td><td>${p.sold||0}</td><td class="num-cell">${fmt((p.price||0)*(p.sold||0))}</td><td>${statusMap[p.status]||p.status}</td><td><button class="icon-btn" onclick="deleteProduct('${p.id}')" style="font-size:14px"><i class="ti ti-trash" style="color:var(--red)"></i></button></td></tr>`).join('')||'<tr><td colspan="7" class="empty">Noch keine Produkte</td></tr>';
+}
+
+function renderFinances(){
+  const tbody=document.getElementById('expenses-tbody');if(!tbody)return;
+  const catColors={'Produktion':'badge-gold','Marketing':'badge-blue','Versand':'badge-green','Software':'badge-purple','Fotografie':'badge-orange','Sonstiges':'badge-grey'};
+  tbody.innerHTML=finances.map(f=>`<tr><td style="color:var(--text3)">${f.date}</td><td><span class="badge ${catColors[f.category]||'badge-grey'}">${esc(f.category)}</span></td><td>${esc(f.description||'')}</td><td class="num-cell">${fmt(f.amount)}</td><td><button class="icon-btn" onclick="deleteFinance('${f.id}')" style="font-size:14px"><i class="ti ti-trash" style="color:var(--red)"></i></button></td></tr>`).join('')||'<tr><td colspan="5" class="empty">Noch keine Ausgaben</td></tr>';
+  const totalExp=finances.reduce((s,f)=>s+Number(f.amount||0),0);
+  const totalRev=shopifyData.reduce((s,d)=>s+Number(d.revenue||0),0);
+  const stockVal=products.reduce((s,p)=>s+Number(p.price||0)*Number(p.stock||0),0);
+  const setV=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  setV('fin-revenue',fmt(totalRev));setV('fin-expenses',fmt(totalExp));setV('fin-profit',fmt(totalRev-totalExp));setV('fin-stock-val',fmt(stockVal));
+  updateExpensesChart();
+}
+
+function renderDrops(){
+  const el=document.getElementById('drops-container');if(!el)return;
+  if(!drops.length){el.innerHTML='<div class="card"><div class="empty"><i class="ti ti-package"></i>Noch keine Drops geplant</div></div>';return;}
+  const statusMap={planning:'<span class="badge badge-grey">Planung</span>',production:'<span class="badge badge-orange">Produktion</span>',ready:'<span class="badge badge-blue">Bereit</span>',live:'<span class="badge badge-green">Live</span>',sold_out:'<span class="badge badge-red">Ausverkauft</span>'};
+  el.innerHTML=drops.map(d=>`<div class="card" style="margin-bottom:12px"><div class="card-header"><span style="font-size:15px;font-weight:500;color:var(--text)">${esc(d.name)}</span><div style="display:flex;align-items:center;gap:8px">${statusMap[d.status]||d.status}<button class="icon-btn" onclick="deleteDrop('${d.id}')" style="font-size:16px"><i class="ti ti-trash" style="color:var(--red)"></i></button></div></div><div class="grid-3" style="margin-bottom:${d.notes?'12px':'0'}"><div><div style="font-size:11px;color:var(--text3);margin-bottom:2px">DROP DATUM</div><div style="font-size:14px">${d.drop_date||'–'}</div></div><div><div style="font-size:11px;color:var(--text3);margin-bottom:2px">PRODUKTE</div><div style="font-size:14px">${esc(d.products||'–')}</div></div><div><div style="font-size:11px;color:var(--text3);margin-bottom:2px">BUDGET</div><div style="font-size:14px">${d.budget?fmt(d.budget):'–'}</div></div></div>${d.notes?`<div style="background:var(--bg3);border-radius:var(--radius-sm);padding:10px 12px;font-size:13px;color:var(--text2);white-space:pre-wrap">${esc(d.notes)}</div>`:''}</div>`).join('');
+}
+
+function renderCampaigns(){
+  const tbody=document.getElementById('campaigns-tbody');if(!tbody)return;
+  const statusMap={planned:'<span class="badge badge-grey">Geplant</span>',active:'<span class="badge badge-green">Aktiv</span>',paused:'<span class="badge badge-orange">Pausiert</span>',done:'<span class="badge badge-blue">Fertig</span>'};
+  tbody.innerHTML=campaigns.map(c=>`<tr><td class="num-cell">${esc(c.name)}</td><td><span class="badge badge-blue">${esc(c.channel)}</span></td><td class="num-cell">${fmt(c.budget)}</td><td class="num-cell">${fmt(c.spent)}</td><td>${c.clicks||0}</td><td>${c.conversions||0}</td><td>${statusMap[c.status]||c.status}</td><td><button class="icon-btn" onclick="deleteCampaign('${c.id}')" style="font-size:14px"><i class="ti ti-trash" style="color:var(--red)"></i></button></td></tr>`).join('')||'<tr><td colspan="8" class="empty">Noch keine Kampagnen</td></tr>';
+  const active=campaigns.filter(c=>c.status==='active').length;
+  const totalBudget=campaigns.reduce((s,c)=>s+Number(c.budget||0),0);
+  const totalSpent=campaigns.reduce((s,c)=>s+Number(c.spent||0),0);
+  const setV=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  setV('camp-active',active);setV('camp-budget',fmt(totalBudget));setV('camp-spent',fmt(totalSpent));
+}
+
+function renderCalendar(){
+  const grid=document.getElementById('cal-grid');if(!grid)return;
+  const monthLabel=document.getElementById('cal-month-label');
+  const months=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+  if(monthLabel)monthLabel.textContent=`${months[calMonth]} ${calYear}`;
+  const firstDay=new Date(calYear,calMonth,1);
+  const startDow=(firstDay.getDay()+6)%7;
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  const daysInPrev=new Date(calYear,calMonth,0).getDate();
+  let cells='';
+  for(let i=0;i<startDow;i++){const day=daysInPrev-startDow+i+1;cells+=`<div class="cal-day other-month"><div class="cal-day-num">${day}</div></div>`;}
+  for(let d=1;d<=daysInMonth;d++){
+    const dateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday=new Date().toDateString()===new Date(calYear,calMonth,d).toDateString();
+    const dayEvents=calEvents.filter(e=>e.event_date===dateStr);
+    const evHTML=dayEvents.slice(0,3).map(e=>`<div class="cal-event type-${e.type||'other'}">${esc(e.title)}</div>`).join('');
+    cells+=`<div class="cal-day${isToday?' today':''}" onclick="quickAddEvent('${dateStr}')"><div class="cal-day-num">${d}</div>${evHTML}</div>`;
+  }
+  const remaining=(7-((startDow+daysInMonth)%7))%7;
+  for(let i=1;i<=remaining;i++)cells+=`<div class="cal-day other-month"><div class="cal-day-num">${i}</div></div>`;
+  grid.innerHTML=cells;
+}
+
+function renderStats(){
+  const daily=tasks.filter(t=>t.type==='daily');
+  const weekly=tasks.filter(t=>t.type==='weekly');
+  const done=daily.filter(t=>t.done).length;
+  const open=daily.filter(t=>!t.done).length+weekly.filter(t=>!t.done).length;
+  const totalRev=shopifyData.reduce((s,d)=>s+Number(d.revenue||0),0);
+  const totalOrd=shopifyData.reduce((s,d)=>s+Number(d.orders||0),0);
+  const totalExp=finances.reduce((s,f)=>s+Number(f.amount||0),0);
+  const setV=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  setV('s-done',done);setV('s-open',open);setV('s-revenue',fmt(totalRev));
+  setV('kpi-revenue',fmt(totalRev));setV('kpi-orders',totalOrd);setV('kpi-profit',fmt(totalRev-totalExp));setV('kpi-aov',totalOrd?fmt(totalRev/totalOrd):'–');
+  let streak=0;
+  for(let i=0;i<60;i++){const d=new Date();d.setDate(d.getDate()-i);const key=d.toDateString();if(habits.length>0&&habits.every(h=>(h.days||{})[key]))streak++;else if(i>0)break;}
+  setV('s-streak',streak);
+  const nextDrop=drops.find(d=>d.status!=='sold_out'&&d.status!=='archived');
+  const ndEl=document.getElementById('next-drop-preview');
+  if(ndEl){
+    if(nextDrop){ndEl.innerHTML=`<div style="font-size:15px;font-weight:500;margin-bottom:6px">${esc(nextDrop.name)}</div><div style="font-size:13px;color:var(--text3);margin-bottom:4px">📅 ${nextDrop.drop_date||'Datum TBD'}</div><div style="font-size:13px;color:var(--text3)">🏷 ${esc(nextDrop.products||'–')}</div>`;}
+    else{ndEl.innerHTML='<p class="empty">Kein Drop geplant</p>';}
+  }
+  updateRevenueChart();
+}
+
+function renderNotesUI(){
+  const qn=document.getElementById('quick-note'),fn=document.getElementById('notes-full');
+  if(qn&&!qn.matches(':focus'))qn.value=noteContent;
+  if(fn&&!fn.matches(':focus'))fn.value=noteContent;
+}
+
+// CHARTS
+function updateShopifyChart(){
+  const ctx=document.getElementById('shopifyChart');if(!ctx)return;
+  const labels=shopifyData.map(d=>d.month);
+  const data=shopifyData.map(d=>d.revenue||0);
+  if(charts.shopify)charts.shopify.destroy();
+  charts.shopify=new Chart(ctx,{type:'bar',data:{labels,datasets:[{label:'Umsatz €',data,backgroundColor:'rgba(201,169,110,0.3)',borderColor:'rgba(201,169,110,0.8)',borderWidth:1,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#5a5856',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'#5a5856',font:{size:10},callback:v=>'€'+v},grid:{color:'rgba(255,255,255,0.04)'}}}}});
+}
+
+function updateRevenueChart(){
+  const ctx=document.getElementById('revenueChart');if(!ctx)return;
+  const data=shopifyData.slice(-6);
+  if(charts.revenue)charts.revenue.destroy();
+  charts.revenue=new Chart(ctx,{type:'line',data:{labels:data.map(d=>d.month),datasets:[{data:data.map(d=>d.revenue||0),borderColor:'rgba(201,169,110,0.8)',backgroundColor:'rgba(201,169,110,0.08)',fill:true,tension:0.4,pointBackgroundColor:'rgba(201,169,110,0.8)',pointRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#5a5856',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'#5a5856',font:{size:10},callback:v=>'€'+v},grid:{color:'rgba(255,255,255,0.04)'}}}}});
+}
+
+function updateExpensesChart(){
+  const ctx=document.getElementById('expensesChart');if(!ctx)return;
+  const cats={};finances.forEach(f=>{cats[f.category]=(cats[f.category]||0)+Number(f.amount||0);});
+  const labels=Object.keys(cats),data=Object.values(cats);
+  if(charts.expenses)charts.expenses.destroy();
+  if(!labels.length)return;
+  charts.expenses=new Chart(ctx,{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:['rgba(201,169,110,0.6)','rgba(91,141,238,0.6)','rgba(76,175,125,0.6)','rgba(232,148,74,0.6)','rgba(139,127,212,0.6)','rgba(90,88,86,0.6)']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#9a9893',font:{size:11}}}}}});
+}
+
+// TASK ACTIONS
+async function toggleTask(id){const t=tasks.find(t=>t.id===id);if(!t)return;t.done=!t.done;renderTasks();renderStats();await sb.from('tasks').update({done:t.done}).eq('id',id);}
+async function deleteTask(id){tasks=tasks.filter(t=>t.id!==id);renderTasks();renderStats();await sb.from('tasks').delete().eq('id',id);showToast('Gelöscht');}
+function toggleAdd(type){const row=document.getElementById('add-'+type+'-row');if(!row)return;const vis=row.style.display==='none'||!row.style.display;row.style.display=vis?'flex':'none';if(vis){const inp=document.getElementById('add-'+type+'-input');if(inp)inp.focus();}}
+async function addTask(type){const base=type.replace(/2$/,'');const inp=document.getElementById('add-'+type+'-input');if(!inp)return;const text=inp.value.trim();if(!text)return;const id='task_'+Date.now();const task={id,type:base,text,done:false};tasks.push(task);inp.value='';document.getElementById('add-'+type+'-row').style.display='none';renderTasks();renderStats();await sb.from('tasks').insert(task);showToast('Aufgabe hinzugefügt');}
+
+// HABIT ACTIONS
+async function toggleHabit(id,key){const h=habits.find(h=>h.id===id);if(!h)return;if(!h.days)h.days={};h.days[key]=!h.days[key];renderHabits();renderStats();await sb.from('habits').update({days:h.days}).eq('id',id);}
+async function deleteHabit(id){habits=habits.filter(h=>h.id!==id);renderHabits();renderStats();await sb.from('habits').delete().eq('id',id);}
+async function addHabit(){const inp=document.getElementById('add-habit-input');const text=inp.value.trim();if(!text)return;const id='habit_'+Date.now();const habit={id,text,days:{}};habits.push(habit);inp.value='';document.getElementById('add-habit-row').style.display='none';renderHabits();renderStats();await sb.from('habits').insert(habit);showToast('Habit hinzugefügt');}
+
+// NOTES
+function debounceNote(){const v1=document.getElementById('quick-note')?.value;const v2=document.getElementById('notes-full')?.value;noteContent=v1||v2||'';clearTimeout(noteTimer);noteTimer=setTimeout(async()=>await sb.from('notes').upsert({id:'main',content:noteContent}),1000);}
+
+// SHOPIFY
+async function saveShopifyEntry(){const m=document.getElementById('sh-month').value;const r=document.getElementById('sh-revenue').value;const o=document.getElementById('sh-orders').value;const nc=document.getElementById('sh-new-customers').value;const note=document.getElementById('sh-note').value;if(!m||!r)return showToast('Monat & Umsatz angeben',true);const entry={id:'sh_'+m,month:m,revenue:parseFloat(r)||0,orders:parseInt(o)||0,new_customers:parseInt(nc)||0,note};const existing=shopifyData.findIndex(d=>d.id===entry.id);if(existing>=0)shopifyData[existing]=entry;else shopifyData.push(entry);shopifyData.sort((a,b)=>a.month.localeCompare(b.month));await sb.from('shopify_data').upsert(entry);closeModal('modal-shopify-entry');renderShopify();renderStats();showToast('Shopify Eintrag gespeichert');}
+async function deleteShopifyEntry(id){shopifyData=shopifyData.filter(d=>d.id!==id);await sb.from('shopify_data').delete().eq('id',id);renderShopify();renderStats();}
+
+// PRODUCTS
+async function saveProduct(){const n=document.getElementById('prod-name').value.trim();if(!n)return;const p={id:'prod_'+Date.now(),name:n,price:parseFloat(document.getElementById('prod-price').value)||0,stock:parseInt(document.getElementById('prod-stock').value)||0,sold:parseInt(document.getElementById('prod-sold').value)||0,status:document.getElementById('prod-status').value};products.push(p);await sb.from('products').insert(p);closeModal('modal-product-entry');renderProducts();renderStats();showToast('Produkt gespeichert');}
+async function deleteProduct(id){products=products.filter(p=>p.id!==id);await sb.from('products').delete().eq('id',id);renderProducts();renderStats();}
+
+// FINANCES
+async function saveFinanceEntry(){const a=document.getElementById('fin-amount').value;if(!a)return;const f={id:'fin_'+Date.now(),date:document.getElementById('fin-date').value||new Date().toISOString().split('T')[0],amount:parseFloat(a)||0,category:document.getElementById('fin-category').value,description:document.getElementById('fin-desc').value};finances.unshift(f);await sb.from('finances').insert(f);closeModal('modal-finance-entry');renderFinances();renderStats();showToast('Ausgabe gespeichert');}
+async function deleteFinance(id){finances=finances.filter(f=>f.id!==id);await sb.from('finances').delete().eq('id',id);renderFinances();renderStats();}
+
+// DROPS
+async function saveDrop(){const n=document.getElementById('drop-name').value.trim();if(!n)return;const d={id:'drop_'+Date.now(),name:n,drop_date:document.getElementById('drop-date').value,status:document.getElementById('drop-status').value,products:document.getElementById('drop-products').value,budget:parseFloat(document.getElementById('drop-budget').value)||0,notes:document.getElementById('drop-notes').value};drops.push(d);drops.sort((a,b)=>a.drop_date?.localeCompare(b.drop_date)||0);await sb.from('drops').insert(d);closeModal('modal-drop-entry');renderDrops();renderStats();showToast('Drop gespeichert');}
+async function deleteDrop(id){drops=drops.filter(d=>d.id!==id);await sb.from('drops').delete().eq('id',id);renderDrops();renderStats();}
+
+// CAMPAIGNS
+async function saveCampaign(){const n=document.getElementById('camp-name').value.trim();if(!n)return;const c={id:'camp_'+Date.now(),name:n,channel:document.getElementById('camp-channel').value,status:document.getElementById('camp-status').value,budget:parseFloat(document.getElementById('camp-budget-inp').value)||0,spent:parseFloat(document.getElementById('camp-spent-inp').value)||0,clicks:parseInt(document.getElementById('camp-clicks').value)||0,conversions:parseInt(document.getElementById('camp-conv').value)||0};campaigns.push(c);await sb.from('campaigns').insert(c);closeModal('modal-campaign-entry');renderCampaigns();showToast('Kampagne gespeichert');}
+async function deleteCampaign(id){campaigns=campaigns.filter(c=>c.id!==id);await sb.from('campaigns').delete().eq('id',id);renderCampaigns();}
+
+// CALENDAR
+function changeMonth(dir){calMonth+=dir;if(calMonth>11){calMonth=0;calYear++;}else if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
+function quickAddEvent(date){document.getElementById('event-date').value=date;openModal('modal-event-entry');}
+async function saveEvent(){const t=document.getElementById('event-title').value.trim();if(!t)return;const e={id:'evt_'+Date.now(),title:t,event_date:document.getElementById('event-date').value,type:document.getElementById('event-type').value,note:document.getElementById('event-note').value};calEvents.push(e);await sb.from('cal_events').insert(e);closeModal('modal-event-entry');renderCalendar();showToast('Event gespeichert');}
+
+function switchShopifyTab(tab){document.getElementById('shopify-tab-monthly').style.display=tab==='monthly'?'block':'none';document.getElementById('shopify-tab-products').style.display=tab==='products'?'block':'none';document.querySelectorAll('.tab-bar .tab').forEach((t,i)=>t.classList.toggle('active',(tab==='monthly'&&i===0)||(tab==='products'&&i===1)));}
+
+// MODAL
+function openModal(id){document.getElementById(id).classList.add('show');}
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show');}));
+
+// PAGE
+function showPage(name){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));const p=document.getElementById('page-'+name);if(p)p.classList.add('active');document.querySelectorAll('.nav-item').forEach(n=>{if(n.getAttribute('onclick')?.includes("'"+name+"'"))n.classList.add('active');});if(name==='et-shopify')setTimeout(updateShopifyChart,100);if(name==='et-overview')setTimeout(updateRevenueChart,100);if(name==='et-finances')setTimeout(updateExpensesChart,100);}
+
+// AI
+function openClaude(q){window.open('https://claude.ai/new?q='+encodeURIComponent(q),'_blank');}
+function sendAI(){const inp=document.getElementById('ai-input');const q=inp.value.trim();if(!q)return;inp.value='';openClaude(q);}
+
+// TOAST
+function showToast(msg,err=false){const t=document.getElementById('toast');document.getElementById('toast-icon').className=err?'ti ti-alert-circle':'ti ti-check';document.getElementById('toast-icon').style.color=err?'var(--red)':'var(--green)';document.getElementById('toast-msg').textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+
+// CLOCK
+function updateClock(){const now=new Date();document.getElementById('clock').textContent=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');const days=['So','Mo','Di','Mi','Do','Fr','Sa'],months=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];document.getElementById('dateline').textContent=days[now.getDay()]+', '+now.getDate()+'. '+months[now.getMonth()];const h=now.getHours();const gt=document.getElementById('greet-title');if(gt)gt.textContent=h<12?'Guten Morgen':h<18?'Guten Tag':'Guten Abend';}
+updateClock();setInterval(updateClock,15000);
+
+// WEATHER
+fetch('https://api.open-meteo.com/v1/forecast?latitude=51.896&longitude=11.054&current_weather=true&timezone=auto').then(r=>r.json()).then(d=>{const w=d.current_weather;const codes={0:'Klar',1:'Heiter',2:'Bewölkt',3:'Bedeckt',45:'Nebel',51:'Niesel',61:'Regen',71:'Schnee',80:'Schauer',95:'Gewitter'};document.getElementById('weather-txt').textContent=`${Math.round(w.temperature)}°C · ${codes[w.weathercode]||''}`;}).catch(()=>{});
+
+// SUPABASE TABLES CHECK & INIT
+async function ensureTables(){
+  const tables=['shopify_data','products','finances','drops','campaigns','cal_events'];
+  for(const t of tables){await sb.from(t).select('id').limit(1).catch(()=>{});}
+}
+
+ensureTables().then(()=>loadAll());
+</script>
+</body>
+</html>
