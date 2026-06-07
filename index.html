@@ -220,6 +220,97 @@ select.form-input option{background:var(--bg2)}
   .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
   .form-grid,.form-grid-3{grid-template-columns:1fr}
 }
+
+/* ===== VIDEO STUDIO ===== */
+.vs-pipeline{display:flex;gap:0;margin-bottom:24px;position:relative}
+.vs-pipeline::before{content:'';position:absolute;top:22px;left:22px;right:22px;height:1px;background:linear-gradient(90deg,var(--gold-border),var(--border),var(--border),var(--border));z-index:0}
+.vs-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;z-index:1}
+.vs-step-dot{width:44px;height:44px;border-radius:50%;background:var(--bg3);border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:18px;transition:all 0.3s;color:var(--text3)}
+.vs-step.active .vs-step-dot{border-color:var(--gold);color:var(--gold);background:var(--gold-bg);box-shadow:0 0 16px rgba(201,169,110,0.2)}
+.vs-step.done .vs-step-dot{border-color:var(--green);color:var(--green);background:rgba(76,175,125,0.1)}
+.vs-step-label{font-size:11px;color:var(--text3);text-align:center;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap}
+.vs-step.active .vs-step-label{color:var(--gold)}
+.vs-step.done .vs-step-label{color:var(--green)}
+
+.vs-input-area{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:16px}
+.vs-prompt{width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:12px 14px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.6;resize:none;outline:none;min-height:100px;transition:border-color 0.15s}
+.vs-prompt:focus{border-color:var(--gold-border)}
+.vs-prompt::placeholder{color:var(--text3)}
+.vs-ref-upload{border:1.5px dashed var(--border2);border-radius:var(--radius-sm);padding:1.5rem;text-align:center;cursor:pointer;transition:all 0.15s;position:relative;overflow:hidden}
+.vs-ref-upload:hover{border-color:var(--gold-border);background:var(--gold-bg)}
+.vs-ref-upload input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.vs-ref-preview{width:100%;max-height:200px;object-fit:cover;border-radius:var(--radius-sm);display:none;margin-top:10px}
+
+.vs-output-section{margin-bottom:16px}
+.vs-output-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:0.5px solid var(--border)}
+.vs-output-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.vs-output-icon.gold{background:var(--gold-bg);border:0.5px solid var(--gold-border);color:var(--gold)}
+.vs-output-icon.blue{background:rgba(91,141,238,0.1);border:0.5px solid rgba(91,141,238,0.25);color:var(--blue)}
+.vs-output-icon.purple{background:rgba(139,127,212,0.1);border:0.5px solid rgba(139,127,212,0.25);color:var(--purple)}
+.vs-output-title{font-size:14px;font-weight:500;color:var(--text)}
+.vs-output-sub{font-size:11px;color:var(--text3);margin-top:1px}
+
+.storyboard-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.storyboard-card{background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;transition:border-color 0.15s}
+.storyboard-card:hover{border-color:var(--border2)}
+.storyboard-num{font-size:10px;color:var(--text3);padding:8px 10px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:0.5px}
+.storyboard-img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:var(--bg4)}
+.storyboard-img-placeholder{width:100%;aspect-ratio:16/9;background:var(--bg4);display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:24px}
+.storyboard-desc{padding:10px;font-size:12px;color:var(--text2);line-height:1.5}
+.storyboard-gen-btn{width:100%;padding:8px;background:none;border:none;border-top:0.5px solid var(--border);color:var(--gold);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;transition:background 0.15s}
+.storyboard-gen-btn:hover{background:var(--gold-bg)}
+.storyboard-gen-btn:disabled{color:var(--text3);cursor:default}
+
+.runway-prompt-box{background:var(--bg3);border:0.5px solid var(--gold-border);border-radius:var(--radius-sm);padding:1rem 1.25rem;font-size:13px;color:var(--text);line-height:1.7;position:relative}
+.runway-copy-btn{position:absolute;top:10px;right:10px;background:var(--gold-bg);border:0.5px solid var(--gold-border);color:var(--gold);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:4px}
+.runway-copy-btn:hover{background:rgba(201,169,110,0.15)}
+
+.vs-project-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;display:flex;gap:1rem;align-items:flex-start;transition:border-color 0.15s;cursor:pointer}
+.vs-project-card:hover{border-color:var(--border2)}
+.vs-project-thumb{width:80px;height:52px;border-radius:8px;background:var(--bg3);border:0.5px solid var(--border);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:20px}
+.vs-project-thumb img{width:100%;height:100%;object-fit:cover}
+.vs-project-info{flex:1;min-width:0}
+.vs-project-name{font-size:14px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vs-project-meta{font-size:11px;color:var(--text3);margin-top:3px}
+
+/* ===== FLOATING AI ASSISTANT ===== */
+.ai-float-btn{position:fixed;bottom:2rem;right:2rem;width:52px;height:52px;border-radius:50%;background:var(--gold);color:#1a1a2e;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(201,169,110,0.35);z-index:500;transition:all 0.2s}
+.ai-float-btn:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(201,169,110,0.45)}
+.ai-float-btn.open{background:var(--bg2);color:var(--text2);border:0.5px solid var(--border2);box-shadow:none}
+
+.ai-float-panel{position:fixed;bottom:5.5rem;right:2rem;width:380px;max-height:520px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--radius);display:flex;flex-direction:column;z-index:499;box-shadow:0 8px 40px rgba(0,0,0,0.5);transform:scale(0.95) translateY(10px);opacity:0;pointer-events:none;transition:all 0.2s ease}
+.ai-float-panel.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all}
+
+.ai-panel-header{padding:12px 16px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.ai-panel-avatar{width:28px;height:28px;border-radius:50%;background:var(--gold-bg);border:0.5px solid var(--gold-border);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:13px;flex-shrink:0}
+.ai-panel-name{font-size:13px;font-weight:500;color:var(--text)}
+.ai-panel-status{font-size:11px;color:var(--green)}
+
+.ai-panel-messages{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;min-height:200px}
+.ai-msg{max-width:88%;padding:9px 13px;border-radius:12px;font-size:13px;line-height:1.55}
+.ai-msg.user{background:var(--gold-bg);border:0.5px solid var(--gold-border);color:var(--text);align-self:flex-end;border-radius:12px 12px 4px 12px}
+.ai-msg.assistant{background:var(--bg3);border:0.5px solid var(--border);color:var(--text2);align-self:flex-start;border-radius:12px 12px 12px 4px}
+.ai-msg.thinking{color:var(--text3);font-style:italic}
+
+.ai-panel-suggestions{padding:8px 12px;display:flex;gap:5px;flex-wrap:wrap;border-top:0.5px solid var(--border);flex-shrink:0}
+.ai-sugg{padding:4px 10px;border:0.5px solid var(--border2);border-radius:var(--radius-pill);font-size:11px;color:var(--text3);cursor:pointer;background:none;font-family:'DM Sans',sans-serif;transition:all 0.12s;white-space:nowrap}
+.ai-sugg:hover{border-color:var(--gold-border);color:var(--gold)}
+
+.ai-panel-input{padding:10px 12px;border-top:0.5px solid var(--border);display:flex;gap:8px;flex-shrink:0}
+.ai-panel-inp{flex:1;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius-pill);padding:8px 14px;font-size:13px;color:var(--text);outline:none;font-family:'DM Sans',sans-serif;transition:border-color 0.15s}
+.ai-panel-inp:focus{border-color:var(--gold-border)}
+.ai-panel-inp::placeholder{color:var(--text3)}
+.ai-panel-send{background:var(--gold);color:#1a1a2e;border:none;border-radius:var(--radius-pill);padding:8px 14px;cursor:pointer;font-size:12px;font-weight:500;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:4px;transition:opacity 0.15s;white-space:nowrap}
+.ai-panel-send:hover{opacity:0.85}
+.ai-panel-send:disabled{opacity:0.5;cursor:default}
+
+/* GENERATING ANIMATION */
+.gen-dots{display:inline-flex;gap:3px;align-items:center}
+.gen-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:dot-bounce 1.2s ease-in-out infinite}
+.gen-dot:nth-child(2){animation-delay:0.2s}
+.gen-dot:nth-child(3){animation-delay:0.4s}
+@keyframes dot-bounce{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}
+
 </style>
 </head>
 <body>
@@ -235,7 +326,7 @@ select.form-input option{background:var(--bg2)}
     <div class="brand-mark">Et</div>
     <div class="brand-text">
       <div class="brand-name">Eternell</div>
-      <div class="brand-tagline">Business Hub</div>
+      <div class="brand-tagline">Creative Hub</div>
     </div>
   </div>
   <div class="nav">
@@ -251,8 +342,9 @@ select.form-input option{background:var(--bg2)}
     <button class="nav-item" onclick="showPage('et-drops')"><i class="ti ti-package"></i><span>Drops</span></button>
     <button class="nav-item" onclick="showPage('et-campaigns')"><i class="ti ti-speakerphone"></i><span>Kampagnen</span></button>
     <button class="nav-item" onclick="showPage('et-calendar')"><i class="ti ti-calendar-event"></i><span>Kalender</span></button>
-    <div class="nav-section">Tools</div>
-    <button class="nav-item" onclick="showPage('ai')"><i class="ti ti-sparkles"></i><span>KI-Assistent</span></button>
+    <div class="nav-section">Studio</div>
+    <button class="nav-item" onclick="showPage('video-studio')"><i class="ti ti-video"></i><span>Video Studio</span></button>
+    <button class="nav-item" onclick="showPage('vs-projects')"><i class="ti ti-folder-filled"></i><span>Projekte</span></button>
   </div>
   <div class="sidebar-bottom">
     <div class="sync-status"><span class="sync-dot" id="sync-dot"></span><span id="sync-text">Verbinde...</span></div>
@@ -265,7 +357,6 @@ select.form-input option{background:var(--bg2)}
 </nav>
 
 <main class="main">
-
 <!-- ===== DASHBOARD ===== -->
 <div class="page active" id="page-dashboard">
   <div class="topbar">
@@ -515,7 +606,221 @@ select.form-input option{background:var(--bg2)}
   </div>
 </div>
 
+<!-- ===== VIDEO STUDIO ===== -->
+<div class="page" id="page-video-studio">
+  <div class="topbar">
+    <div>
+      <div class="page-title">Video Studio</div>
+      <div class="page-sub">Idee → Storyboard → Keyframes → Runway Prompt</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn" onclick="showPage('vs-projects')"><i class="ti ti-folder"></i>Meine Projekte</button>
+      <button class="btn btn-gold" onclick="resetStudio()"><i class="ti ti-plus"></i>Neues Projekt</button>
+    </div>
+  </div>
+
+  <!-- Pipeline Steps -->
+  <div class="vs-pipeline" style="margin-bottom:28px">
+    <div class="vs-step active" id="vstep-1">
+      <div class="vs-step-dot"><i class="ti ti-bulb"></i></div>
+      <div class="vs-step-label">Idee</div>
+    </div>
+    <div class="vs-step" id="vstep-2">
+      <div class="vs-step-dot"><i class="ti ti-layout-board"></i></div>
+      <div class="vs-step-label">Storyboard</div>
+    </div>
+    <div class="vs-step" id="vstep-3">
+      <div class="vs-step-dot"><i class="ti ti-photo"></i></div>
+      <div class="vs-step-label">Keyframes</div>
+    </div>
+    <div class="vs-step" id="vstep-4">
+      <div class="vs-step-dot"><i class="ti ti-brand-runway"></i></div>
+      <div class="vs-step-label">Runway Prompt</div>
+    </div>
+  </div>
+
+  <!-- Step 1: Input -->
+  <div id="vs-section-input">
+    <div class="vs-input-area">
+      <div style="display:flex;gap:16px;align-items:flex-start">
+        <div style="flex:1">
+          <div class="form-label" style="margin-bottom:8px">Video-Idee beschreiben</div>
+          <textarea class="vs-prompt" id="vs-prompt-input" placeholder="z.B. Ein elegantes Parfum-Flacon schwebt durch Morgennebel, goldenes Licht trifft auf das Glas, luxuriöse Atmosphäre, cineastischer Look..."></textarea>
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+            <button class="ai-chip" onclick="vsQuickPrompt('Parfum Flacon schwebt durch Morgennebel, goldenes Licht, cineastisch')"><i class="ti ti-droplet"></i>Parfum Lifestyle</button>
+            <button class="ai-chip" onclick="vsQuickPrompt('Model trägt Eternell Parfum, elegante Bewegung, schwarzer Hintergrund, Studio-Licht')"><i class="ti ti-user"></i>Model Shot</button>
+            <button class="ai-chip" onclick="vsQuickPrompt('Close-up Flacon mit Lichtreflexen, Produktvideo, Luxusästhetik, slow motion')"><i class="ti ti-zoom-in"></i>Produkt Close-up</button>
+            <button class="ai-chip" onclick="vsQuickPrompt('Reise durch die Nacht, urbane Atmosphäre, mysteriös, Eternell Duft als Emotion')"><i class="ti ti-moon"></i>Mood & Story</button>
+          </div>
+        </div>
+        <div style="width:200px;flex-shrink:0">
+          <div class="form-label" style="margin-bottom:8px">Referenzbild (optional)</div>
+          <div class="vs-ref-upload" id="vs-ref-drop" onclick="document.getElementById('vs-ref-file').click()">
+            <input type="file" id="vs-ref-file" accept="image/*" style="display:none" onchange="handleRefImage(this)">
+            <i class="ti ti-upload" style="font-size:28px;color:var(--text3);display:block;margin-bottom:8px"></i>
+            <div style="font-size:12px;color:var(--text3)">Bild hochladen</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:4px">JPG, PNG, WEBP</div>
+          </div>
+          <img id="vs-ref-preview" class="vs-ref-preview" alt="Referenz">
+          <div id="vs-ref-name" style="font-size:11px;color:var(--text3);margin-top:6px;display:none"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:center;margin-top:16px;padding-top:14px;border-top:0.5px solid var(--border)">
+        <div style="flex:1">
+          <div class="form-label" style="margin-bottom:6px">Stil</div>
+          <select class="form-input" id="vs-style" style="width:100%">
+            <option value="cinematic">Cinematic / Filmisch</option>
+            <option value="luxury">Luxury / High-End</option>
+            <option value="minimal">Minimal / Clean</option>
+            <option value="dark">Dark / Moody</option>
+            <option value="editorial">Editorial / Fashion</option>
+          </select>
+        </div>
+        <div style="flex:1">
+          <div class="form-label" style="margin-bottom:6px">Dauer</div>
+          <select class="form-input" id="vs-duration" style="width:100%">
+            <option value="15">15 Sek (Reel/Story)</option>
+            <option value="30" selected>30 Sek (Standard)</option>
+            <option value="60">60 Sek (Long Form)</option>
+          </select>
+        </div>
+        <div style="flex:1">
+          <div class="form-label" style="margin-bottom:6px">Format</div>
+          <select class="form-input" id="vs-format" style="width:100%">
+            <option value="9:16">9:16 (Vertical / Reel)</option>
+            <option value="16:9" selected>16:9 (Landscape)</option>
+            <option value="1:1">1:1 (Square)</option>
+          </select>
+        </div>
+        <div style="padding-top:20px">
+          <button class="btn btn-gold" id="vs-generate-btn" onclick="generateStoryboard()" style="padding:10px 20px;font-size:14px">
+            <i class="ti ti-sparkles"></i>Storyboard generieren
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Storyboard -->
+  <div id="vs-section-storyboard" style="display:none">
+    <div class="card vs-output-section">
+      <div class="vs-output-header">
+        <div class="vs-output-icon gold"><i class="ti ti-layout-board"></i></div>
+        <div>
+          <div class="vs-output-title">Storyboard</div>
+          <div class="vs-output-sub">KI hat dein Video in Szenen aufgeteilt</div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <button class="btn" onclick="generateStoryboard()"><i class="ti ti-refresh"></i>Neu generieren</button>
+          <button class="btn btn-gold" id="vs-gen-all-btn" onclick="generateAllKeyframes()"><i class="ti ti-photo"></i>Alle Bilder generieren</button>
+        </div>
+      </div>
+      <div class="storyboard-grid" id="vs-storyboard-grid"></div>
+    </div>
+  </div>
+
+  <!-- Step 3: Keyframes -->
+  <div id="vs-section-keyframes" style="display:none">
+    <div class="card vs-output-section">
+      <div class="vs-output-header">
+        <div class="vs-output-icon blue"><i class="ti ti-photo"></i></div>
+        <div>
+          <div class="vs-output-title">Keyframe Bilder</div>
+          <div class="vs-output-sub">Visuelle Referenz für jede Szene — generiert mit Claude</div>
+        </div>
+        <div style="margin-left:auto">
+          <button class="btn btn-gold" onclick="generateRunwayPrompt()"><i class="ti ti-brand-runway"></i>Runway Prompt erstellen</button>
+        </div>
+      </div>
+      <div class="storyboard-grid" id="vs-keyframes-grid"></div>
+    </div>
+  </div>
+
+  <!-- Step 4: Runway Prompt -->
+  <div id="vs-section-runway" style="display:none">
+    <div class="card vs-output-section">
+      <div class="vs-output-header">
+        <div class="vs-output-icon purple"><i class="ti ti-wand"></i></div>
+        <div>
+          <div class="vs-output-title">Runway Gen-4 Prompt</div>
+          <div class="vs-output-sub">Einfach kopieren & in Runway einfügen</div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <button class="btn btn-gold" onclick="saveVsProject()"><i class="ti ti-device-floppy"></i>Projekt speichern</button>
+        </div>
+      </div>
+      <div style="margin-bottom:12px">
+        <div class="form-label" style="margin-bottom:8px">Haupt-Prompt (für Runway)</div>
+        <div class="runway-prompt-box" id="vs-runway-main">
+          <button class="runway-copy-btn" onclick="copyRunwayPrompt('vs-runway-main')"><i class="ti ti-copy"></i>Kopieren</button>
+          <div id="vs-runway-main-text" style="padding-right:80px"></div>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <div class="form-label" style="margin-bottom:8px">Kamera-Anweisungen</div>
+          <div class="runway-prompt-box" id="vs-runway-camera">
+            <button class="runway-copy-btn" onclick="copyRunwayPrompt('vs-runway-camera')"><i class="ti ti-copy"></i>Kopieren</button>
+            <div id="vs-runway-camera-text" style="padding-right:80px"></div>
+          </div>
+        </div>
+        <div>
+          <div class="form-label" style="margin-bottom:8px">Negative Prompts</div>
+          <div class="runway-prompt-box" id="vs-runway-negative">
+            <button class="runway-copy-btn" onclick="copyRunwayPrompt('vs-runway-negative')"><i class="ti ti-copy"></i>Kopieren</button>
+            <div id="vs-runway-negative-text" style="padding-right:80px"></div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:12px;background:var(--gold-bg);border:0.5px solid var(--gold-border);border-radius:var(--radius-sm);font-size:12px;color:var(--gold)">
+        <i class="ti ti-info-circle"></i> <strong>Workflow:</strong> Kopiere den Haupt-Prompt → Gehe zu runway.ml → Neues Projekt → Gen-4 → Prompt einfügen → Kamera-Anweisungen in das Camera Motion Feld → Generate
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== VIDEO PROJEKTE ===== -->
+<div class="page" id="page-vs-projects">
+  <div class="topbar">
+    <div><div class="page-title">Video Projekte</div><div class="page-sub">Alle gespeicherten Studio-Projekte</div></div>
+    <button class="btn btn-gold" onclick="showPage('video-studio')"><i class="ti ti-plus"></i>Neues Projekt</button>
+  </div>
+  <div id="vs-projects-list">
+    <div class="empty"><i class="ti ti-video-off"></i>Noch keine Projekte gespeichert</div>
+  </div>
+</div>
+
 </main>
+</div>
+
+<!-- ===== FLOATING AI ASSISTANT ===== -->
+<button class="ai-float-btn" id="ai-float-btn" onclick="toggleAiPanel()" title="KI-Assistent">
+  <i class="ti ti-sparkles"></i>
+</button>
+
+<div class="ai-float-panel" id="ai-float-panel">
+  <div class="ai-panel-header">
+    <div class="ai-panel-avatar"><i class="ti ti-sparkles"></i></div>
+    <div>
+      <div class="ai-panel-name">Eternell KI</div>
+      <div class="ai-panel-status">● Online</div>
+    </div>
+    <button class="icon-btn" style="margin-left:auto" onclick="toggleAiPanel()"><i class="ti ti-x"></i></button>
+  </div>
+  <div class="ai-panel-messages" id="ai-panel-messages">
+    <div class="ai-msg assistant">Hallo! Ich bin dein Eternell KI-Assistent. Ich kann navigieren, Notizen schreiben, Tasks hinzufügen und deine Fragen beantworten.</div>
+  </div>
+  <div class="ai-panel-suggestions">
+    <button class="ai-sugg" onclick="aiSuggestion('Gehe zum Video Studio')">🎬 Video Studio</button>
+    <button class="ai-sugg" onclick="aiSuggestion('Was sind meine offenen Tasks?')">📋 Offene Tasks</button>
+    <button class="ai-sugg" onclick="aiSuggestion('Zeige meine Finanzen')">💰 Finanzen</button>
+    <button class="ai-sugg" onclick="aiSuggestion('Neues Video Projekt starten')">✨ Neues Video</button>
+  </div>
+  <div class="ai-panel-input">
+    <input class="ai-panel-inp" id="ai-panel-inp" placeholder="Sag mir was ich tun soll..." onkeydown="if(event.key==='Enter'&&!event.shiftKey)sendAiMessage()">
+    <button class="ai-panel-send" id="ai-panel-send" onclick="sendAiMessage()"><i class="ti ti-send" style="font-size:13px"></i>Senden</button>
+  </div>
 </div>
 
 <!-- ===== MODALS ===== -->
@@ -633,7 +938,6 @@ select.form-input option{background:var(--bg2)}
 </div>
 
 <div class="toast" id="toast"><i class="ti ti-check" id="toast-icon"></i><span id="toast-msg">Gespeichert</span></div>
-
 <script>
 const SUPABASE_URL='https://lckkhhyuvkeyclfluisi.supabase.co';
 const SUPABASE_KEY='sb_publishable_ZcIqZJfpEQ4p3k74Fx0G9w_lrlk6Yl3';
@@ -649,55 +953,59 @@ let charts={};
 let calYear=new Date().getFullYear(),calMonth=new Date().getMonth();
 let editingId=null;
 
+// ===== VIDEO STUDIO STATE =====
+let vsStoryboard=[];
+let vsRefImageBase64=null;
+let vsRefImageType=null;
+let vsProjects=[];
+let vsCurrentProject=null;
+
+// ===== SUPABASE LOAD =====
+function hideLoading(){document.getElementById('loading').style.display='none';}
+
+async function loadAll(){
+  const safetyTimer=setTimeout(()=>{hideLoading();renderAll();},5000);
+  const safe=fn=>fn.catch(()=>({data:[]}));
+  try{
+    const[t,h,n,sh,pr,fi,dr,ca,ce,vsp]=await Promise.all([
+      safe(sb.from('tasks').select('*')),
+      safe(sb.from('habits').select('*')),
+      safe(sb.from('notes').select('*').eq('id','main').single()),
+      safe(sb.from('shopify_data').select('*').order('month')),
+      safe(sb.from('products').select('*')),
+      safe(sb.from('finances').select('*').order('date',{ascending:false})),
+      safe(sb.from('drops').select('*').order('drop_date')),
+      safe(sb.from('campaigns').select('*')),
+      safe(sb.from('cal_events').select('*')),
+      safe(sb.from('vs_projects').select('*').order('created_at',{ascending:false}))
+    ]);
+    tasks=t.data||[];habits=h.data||[];noteContent=n.data?.content||'';
+    shopifyData=sh.data||[];products=pr.data||[];finances=fi.data||[];
+    drops=dr.data||[];campaigns=ca.data||[];calEvents=ce.data||[];
+    vsProjects=vsp.data||[];
+    renderAll();
+    document.getElementById('sync-dot').className='sync-dot';
+    document.getElementById('sync-text').textContent='Synced';
+  }catch(e){
+    document.getElementById('sync-dot').className='sync-dot off';
+    document.getElementById('sync-text').textContent='Offline';
+    renderAll();
+  }finally{
+    clearTimeout(safetyTimer);
+    hideLoading();
+  }
+}
+
+function renderAll(){renderTasks();renderHabits();renderStats();renderShopify();renderProducts();renderFinances();renderDrops();renderCampaigns();renderCalendar();renderVsProjects();renderNotesUI();
+const na=document.getElementById('quick-note');if(na)na.value=noteContent;
+const nb=document.getElementById('notes-full');if(nb)nb.value=noteContent;
+}
+
+
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function fmt(n){return '€'+Number(n||0).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function setSyncStatus(on){document.getElementById('sync-dot').className='sync-dot'+(on?'':' off');document.getElementById('sync-text').textContent=on?'Sync aktiv':'Offline';}
 
-async function loadAll(){
-  try{
-    const [tr,hr,nr,sr,pr,fr,dr,cr,er]=await Promise.all([
-      sb.from('tasks').select('*'),
-      sb.from('habits').select('*'),
-      sb.from('notes').select('*'),
-      sb.from('shopify_data').select('*').order('month',{ascending:true}),
-      sb.from('products').select('*'),
-      sb.from('finances').select('*').order('date',{ascending:false}),
-      sb.from('drops').select('*').order('drop_date',{ascending:true}),
-      sb.from('campaigns').select('*'),
-      sb.from('cal_events').select('*').order('event_date',{ascending:true})
-    ]);
-    tasks=tr.data||[];habits=hr.data||[];
-    const notes_main=(nr.data||[]).find(n=>n.id==='main');
-    const notes_brand=(nr.data||[]).find(n=>n.id==='brand');
-    noteContent=notes_main?.content||'';brandNoteContent=notes_brand?.content||'';
-    shopifyData=sr.data||[];products=pr.data||[];finances=fr.data||[];
-    drops=dr.data||[];campaigns=cr.data||[];calEvents=er.data||[];
-    await rollover();
-    renderAll();setSyncStatus(true);
-    document.getElementById('loading').style.display='none';
-  }catch(e){
-    console.error(e);setSyncStatus(false);
-    document.getElementById('loading').style.display='none';
-    showToast('Offline Modus',true);
-  }
-}
-
-async function rollover(){
-  const lastDay=tasks.find(t=>t.id==='__lastday')?.text;
-  const lastWeek=tasks.find(t=>t.id==='__lastweek')?.text;
-  if(lastDay!==TODAY){
-    for(const t of tasks.filter(t=>t.type==='daily')){await sb.from('tasks').update({done:false}).eq('id',t.id);t.done=false;}
-    await sb.from('tasks').upsert({id:'__lastday',type:'meta',text:TODAY,done:false});
-    const m=tasks.find(t=>t.id==='__lastday');if(m)m.text=TODAY;else tasks.push({id:'__lastday',type:'meta',text:TODAY,done:false});
-  }
-  if(lastWeek!==WEEK){
-    for(const t of tasks.filter(t=>t.type==='weekly')){await sb.from('tasks').update({done:false}).eq('id',t.id);t.done=false;}
-    await sb.from('tasks').upsert({id:'__lastweek',type:'meta',text:WEEK,done:false});
-    const m=tasks.find(t=>t.id==='__lastweek');if(m)m.text=WEEK;else tasks.push({id:'__lastweek',type:'meta',text:WEEK,done:false});
-  }
-}
-
-function renderAll(){renderTasks();renderHabits();renderShopify();renderProducts();renderFinances();renderDrops();renderCampaigns();renderCalendar();renderStats();renderNotesUI();}
 
 function renderTasks(){
   ['daily','daily2','weekly'].forEach(type=>{
@@ -908,6 +1216,485 @@ function showPage(name){document.querySelectorAll('.page').forEach(p=>p.classLis
 function openClaude(q){window.open('https://claude.ai/new?q='+encodeURIComponent(q),'_blank');}
 function sendAI(){const inp=document.getElementById('ai-input');const q=inp.value.trim();if(!q)return;inp.value='';openClaude(q);}
 
+
+// ===== VIDEO STUDIO =====
+function vsSetStep(n){
+  for(let i=1;i<=4;i++){
+    const el=document.getElementById('vstep-'+i);
+    if(!el)continue;
+    el.classList.remove('active','done');
+    if(i<n)el.classList.add('done');
+    else if(i===n)el.classList.add('active');
+  }
+}
+
+function vsQuickPrompt(t){document.getElementById('vs-prompt-input').value=t;}
+
+function handleRefImage(inp){
+  const file=inp.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    vsRefImageBase64=e.target.result.split(',')[1];
+    vsRefImageType=file.type;
+    const prev=document.getElementById('vs-ref-preview');
+    prev.src=e.target.result;prev.style.display='block';
+    document.getElementById('vs-ref-name').style.display='block';
+    document.getElementById('vs-ref-name').textContent=file.name;
+    document.getElementById('vs-ref-drop').style.borderColor='var(--gold-border)';
+  };
+  reader.readAsDataURL(file);
+}
+
+function resetStudio(){
+  document.getElementById('vs-prompt-input').value='';
+  document.getElementById('vs-ref-preview').style.display='none';
+  document.getElementById('vs-ref-name').style.display='none';
+  document.getElementById('vs-ref-drop').style.borderColor='';
+  vsRefImageBase64=null;vsRefImageType=null;vsStoryboard=[];vsCurrentProject=null;
+  document.getElementById('vs-section-storyboard').style.display='none';
+  document.getElementById('vs-section-keyframes').style.display='none';
+  document.getElementById('vs-section-runway').style.display='none';
+  vsSetStep(1);
+}
+
+async function generateStoryboard(){
+  const prompt=document.getElementById('vs-prompt-input').value.trim();
+  if(!prompt)return showToast('Bitte Idee eingeben',true);
+  const style=document.getElementById('vs-style').value;
+  const dur=document.getElementById('vs-duration').value;
+  const fmt=document.getElementById('vs-format').value;
+  const btn=document.getElementById('vs-generate-btn');
+  btn.disabled=true;btn.innerHTML='<span class="gen-dots"><span class="gen-dot"></span><span class="gen-dot"></span><span class="gen-dot"></span></span> Generiere...';
+  vsSetStep(2);
+
+  const systemPrompt=`Du bist ein kreativer Video-Director für die Luxusparfum-Brand Eternell. Erstelle ein detailliertes Storyboard. Antworte NUR mit validem JSON, kein Text davor oder danach.`;
+  const userPrompt=`Erstelle ein Video-Storyboard für folgende Idee: "${prompt}"
+Stil: ${style}, Dauer: ${dur} Sekunden, Format: ${fmt}
+Teile das Video in 4-5 Szenen auf.
+Antwort als JSON-Array:
+[{"scene":1,"title":"Szene-Titel","duration":"5 Sek","description":"Detaillierte visuelle Beschreibung","camera":"Kamerabewegung","mood":"Stimmung","imagePrompt":"Englischer Bildprompt für KI-Bildgenerator, sehr detailliert, Fotostil"}]`;
+
+  try{
+    const msgs=[{role:'user',content:userPrompt}];
+    if(vsRefImageBase64){
+      msgs[0].content=[
+        {type:'image',source:{type:'base64',media_type:vsRefImageType,data:vsRefImageBase64}},
+        {type:'text',text:userPrompt+'\n\nBeachte das Referenzbild für den visuellen Stil.'}
+      ];
+    }
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:systemPrompt,messages:msgs})
+    });
+    const data=await res.json();
+    const raw=data.content[0].text.replace(/```json|```/g,'').trim();
+    vsStoryboard=JSON.parse(raw);
+    renderStoryboard();
+    document.getElementById('vs-section-storyboard').style.display='block';
+    document.getElementById('vs-section-storyboard').scrollIntoView({behavior:'smooth',block:'start'});
+    showToast('Storyboard erstellt!');
+  }catch(e){showToast('Fehler beim Generieren',true);console.error(e);}
+  btn.disabled=false;btn.innerHTML='<i class="ti ti-sparkles"></i>Storyboard generieren';
+}
+
+function renderStoryboard(){
+  const grid=document.getElementById('vs-storyboard-grid');
+  grid.innerHTML=vsStoryboard.map((s,i)=>`
+    <div class="storyboard-card" id="scard-${i}">
+      <div class="storyboard-num"><i class="ti ti-number"></i> Szene ${s.scene} · ${s.duration}</div>
+      <div class="storyboard-img-placeholder" id="simg-placeholder-${i}"><i class="ti ti-photo"></i></div>
+      <img id="simg-${i}" class="storyboard-img" style="display:none" alt="Keyframe ${s.scene}">
+      <div class="storyboard-desc">
+        <strong style="color:var(--text);display:block;margin-bottom:4px">${s.title}</strong>
+        ${s.description}<br>
+        <span style="color:var(--text3);font-size:11px;margin-top:4px;display:block"><i class="ti ti-camera"></i> ${s.camera}</span>
+        <span style="color:var(--purple);font-size:11px"><i class="ti ti-mood-happy"></i> ${s.mood}</span>
+      </div>
+      <button class="storyboard-gen-btn" id="sbtn-${i}" onclick="generateKeyframe(${i})">
+        <i class="ti ti-sparkles"></i> Bild generieren
+      </button>
+    </div>
+  `).join('');
+}
+
+async function generateKeyframe(idx){
+  const scene=vsStoryboard[idx];if(!scene)return;
+  const btn=document.getElementById('sbtn-'+idx);
+  const placeholder=document.getElementById('simg-placeholder-'+idx);
+  const img=document.getElementById('simg-'+idx);
+  btn.disabled=true;btn.innerHTML='<span class="gen-dots"><span class="gen-dot"></span><span class="gen-dot"></span><span class="gen-dot"></span></span> Generiert...';
+  placeholder.innerHTML='<span class="gen-dots"><span class="gen-dot"></span><span class="gen-dot"></span><span class="gen-dot"></span></span>';
+
+  const style=document.getElementById('vs-style').value;
+  const styleMap={cinematic:'cinematic film still, anamorphic lens, color grading',luxury:'luxury fashion photography, high-end editorial, studio lighting',minimal:'minimalist photography, clean composition, negative space',dark:'dark moody photography, dramatic shadows, low key lighting',editorial:'editorial fashion photography, magazine quality'};
+  const styleDesc=styleMap[style]||'cinematic';
+
+  try{
+    const msgs=[{role:'user',content:`Create a ${styleDesc} image for this perfume video scene: ${scene.imagePrompt}. Brand: Eternell luxury perfume. High quality, professional photography style.`}];
+    if(vsRefImageBase64 && idx===0){
+      msgs[0].content=[
+        {type:'image',source:{type:'base64',media_type:vsRefImageType,data:vsRefImageBase64}},
+        {type:'text',text:`Based on this reference image's style, create a ${styleDesc} image for: ${scene.imagePrompt}. Brand: Eternell luxury perfume.`}
+      ];
+    }
+    // Use Claude to generate detailed description, then show as styled card
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:300,
+        messages:[{role:'user',content:`Du bist ein Bildregisseur. Beschreibe das Keyframe-Bild für Szene ${scene.scene} in 2-3 prägnanten Sätzen auf Deutsch. Szene: ${scene.description}. Stil: ${styleDesc}. Kamera: ${scene.camera}. Antworte nur mit der Bildbeschreibung, kein Präambel.`}]
+      })
+    });
+    const data=await res.json();
+    const desc=data.content[0].text;
+
+    // Show visual card instead of actual image (no image generation API)
+    const colors={cinematic:'linear-gradient(135deg,#0a0a1a,#1a1025,#0d1a2e)',luxury:'linear-gradient(135deg,#1a1208,#2d2010,#1a1208)',minimal:'linear-gradient(135deg,#111118,#1a1a22,#111118)',dark:'linear-gradient(135deg,#080808,#0f0a0f,#080808)',editorial:'linear-gradient(135deg,#0a0a0a,#1a1015,#0a0a0a)'};
+    const bg=colors[style]||colors.cinematic;
+    placeholder.style.display='none';
+    img.style.display='none';
+    const card=document.getElementById('scard-'+idx);
+    const visDiv=document.createElement('div');
+    visDiv.style.cssText=`width:100%;aspect-ratio:16/9;background:${bg};display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center;border-bottom:0.5px solid var(--border)`;
+    visDiv.innerHTML=`<div style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--gold);margin-bottom:8px;letter-spacing:1px">SZENE ${scene.scene}</div><div style="font-size:11px;color:rgba(255,255,255,0.55);line-height:1.6;max-width:180px">${desc}</div><div style="margin-top:10px;font-size:10px;color:var(--gold);opacity:0.5;text-transform:uppercase;letter-spacing:2px">${style}</div>`;
+    card.querySelector('.storyboard-img-placeholder').replaceWith(visDiv);
+    vsStoryboard[idx].generatedDesc=desc;
+    vsStoryboard[idx].generated=true;
+
+    // Check if all generated → show keyframes section
+    const allDone=vsStoryboard.every(s=>s.generated);
+    if(allDone){
+      renderKeyframes();
+      document.getElementById('vs-section-keyframes').style.display='block';
+      vsSetStep(3);
+      document.getElementById('vs-section-keyframes').scrollIntoView({behavior:'smooth'});
+    }
+    btn.innerHTML='<i class="ti ti-check" style="color:var(--green)"></i> Generiert';
+    showToast(`Szene ${scene.scene} fertig`);
+  }catch(e){
+    btn.disabled=false;btn.innerHTML='<i class="ti ti-sparkles"></i> Bild generieren';
+    placeholder.innerHTML='<i class="ti ti-photo"></i>';
+    showToast('Fehler',true);
+  }
+}
+
+async function generateAllKeyframes(){
+  const btn=document.getElementById('vs-gen-all-btn');
+  btn.disabled=true;btn.innerHTML='<span class="gen-dots"><span class="gen-dot"></span><span class="gen-dot"></span><span class="gen-dot"></span></span> Alle werden generiert...';
+  for(let i=0;i<vsStoryboard.length;i++){
+    if(!vsStoryboard[i].generated){await generateKeyframe(i);await new Promise(r=>setTimeout(r,400));}
+  }
+  btn.disabled=false;btn.innerHTML='<i class="ti ti-check"></i> Alle generiert';
+}
+
+function renderKeyframes(){
+  const grid=document.getElementById('vs-keyframes-grid');
+  grid.innerHTML=vsStoryboard.map((s,i)=>`
+    <div class="storyboard-card">
+      <div class="storyboard-num"><i class="ti ti-photo"></i> Keyframe ${s.scene}</div>
+      <div style="padding:12px;background:linear-gradient(135deg,#0a0a1a,#1a1025);aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;border-bottom:0.5px solid var(--border)">
+        <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--gold)">${s.title}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.5);text-align:center;max-width:160px">${s.generatedDesc||s.description}</div>
+      </div>
+      <div class="storyboard-desc"><span style="color:var(--text3);font-size:11px"><i class="ti ti-camera"></i> ${s.camera}</span></div>
+    </div>
+  `).join('');
+}
+
+async function generateRunwayPrompt(){
+  const btn=event.target.closest('button');
+  btn.disabled=true;btn.innerHTML='<span class="gen-dots"><span class="gen-dot"></span><span class="gen-dot"></span><span class="gen-dot"></span></span>';
+  vsSetStep(4);
+  const style=document.getElementById('vs-style').value;
+  const dur=document.getElementById('vs-duration').value;
+  const fmt=document.getElementById('vs-format').value;
+  const originalPrompt=document.getElementById('vs-prompt-input').value;
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:800,
+        system:'Du bist ein Experte für KI-Video-Generierung mit Runway Gen-4. Erstelle optimierte Prompts. Antworte NUR mit JSON, kein Text davor/danach.',
+        messages:[{role:'user',content:`Erstelle einen optimierten Runway Gen-4 Prompt für dieses Parfum-Video.
+Marke: Eternell (Luxusparfum)
+Original Idee: ${originalPrompt}
+Stil: ${style}, Dauer: ${dur}s, Format: ${fmt}
+Szenen: ${vsStoryboard.map(s=>`Szene ${s.scene}: ${s.description}`).join(' | ')}
+
+Antworte als JSON:
+{"main":"[Haupt-Prompt auf Englisch, sehr detailliert, Runway-optimiert, ca. 150-200 Wörter]","camera":"[Kamera-Anweisungen auf Englisch: Bewegungen, Übergänge, Schnitte]","negative":"[Was vermieden werden soll auf Englisch]"}`}]
+      })
+    });
+    const data=await res.json();
+    const raw=data.content[0].text.replace(/```json|```/g,'').trim();
+    const prompts=JSON.parse(raw);
+    document.getElementById('vs-runway-main-text').textContent=prompts.main;
+    document.getElementById('vs-runway-camera-text').textContent=prompts.camera;
+    document.getElementById('vs-runway-negative-text').textContent=prompts.negative;
+    document.getElementById('vs-section-runway').style.display='block';
+    document.getElementById('vs-section-runway').scrollIntoView({behavior:'smooth'});
+    showToast('Runway Prompt bereit!');
+  }catch(e){showToast('Fehler',true);console.error(e);}
+  btn.disabled=false;btn.innerHTML='<i class="ti ti-brand-runway"></i>Runway Prompt erstellen';
+}
+
+function copyRunwayPrompt(boxId){
+  const text=document.getElementById(boxId).querySelector('div[id$="-text"]')?.textContent||'';
+  navigator.clipboard.writeText(text).then(()=>showToast('Kopiert!'));
+}
+
+async function saveVsProject(){
+  const name=document.getElementById('vs-prompt-input').value.slice(0,60)||'Video Projekt';
+  const project={
+    id:'vsp_'+Date.now(),
+    name,
+    prompt:document.getElementById('vs-prompt-input').value,
+    style:document.getElementById('vs-style').value,
+    duration:document.getElementById('vs-duration').value,
+    format:document.getElementById('vs-format').value,
+    storyboard:vsStoryboard,
+    runway_main:document.getElementById('vs-runway-main-text').textContent,
+    runway_camera:document.getElementById('vs-runway-camera-text').textContent,
+    runway_negative:document.getElementById('vs-runway-negative-text').textContent,
+    created_at:new Date().toISOString()
+  };
+  vsProjects.unshift(project);
+  await sb.from('vs_projects').insert(project).catch(()=>{});
+  renderVsProjects();
+  showToast('Projekt gespeichert!');
+}
+
+function renderVsProjects(){
+  const el=document.getElementById('vs-projects-list');
+  if(!vsProjects.length){el.innerHTML='<div class="empty"><i class="ti ti-video-off"></i>Noch keine Projekte gespeichert</div>';return;}
+  el.innerHTML=vsProjects.map(p=>`
+    <div class="vs-project-card" style="margin-bottom:10px" onclick="loadVsProject('${p.id}')">
+      <div class="vs-project-thumb">
+        <i class="ti ti-video" style="font-size:24px"></i>
+      </div>
+      <div class="vs-project-info">
+        <div class="vs-project-name">${p.name}</div>
+        <div class="vs-project-meta">${p.style} · ${p.duration}s · ${p.format} · ${new Date(p.created_at).toLocaleDateString('de')}</div>
+        <div class="vs-project-meta" style="margin-top:4px;color:var(--text2)">${p.storyboard?.length||0} Szenen · ${p.runway_main?'Prompt bereit':'Kein Prompt'}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="badge badge-gold">${p.storyboard?.length||0} Szenen</span>
+        <button class="btn btn-red" style="font-size:11px;padding:4px 8px" onclick="event.stopPropagation();deleteVsProject('${p.id}')"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function loadVsProject(id){
+  const p=vsProjects.find(x=>x.id===id);if(!p)return;
+  vsCurrentProject=p;vsStoryboard=p.storyboard||[];
+  document.getElementById('vs-prompt-input').value=p.prompt||'';
+  document.getElementById('vs-style').value=p.style||'cinematic';
+  document.getElementById('vs-duration').value=p.duration||'30';
+  document.getElementById('vs-format').value=p.format||'16:9';
+  showPage('video-studio');
+  if(vsStoryboard.length){
+    renderStoryboard();
+    document.getElementById('vs-section-storyboard').style.display='block';
+    vsSetStep(3);
+  }
+  if(p.runway_main){
+    document.getElementById('vs-runway-main-text').textContent=p.runway_main;
+    document.getElementById('vs-runway-camera-text').textContent=p.runway_camera||'';
+    document.getElementById('vs-runway-negative-text').textContent=p.runway_negative||'';
+    document.getElementById('vs-section-runway').style.display='block';
+    vsSetStep(4);
+  }
+  showToast('Projekt geladen');
+}
+
+async function deleteVsProject(id){
+  vsProjects=vsProjects.filter(p=>p.id!==id);
+  await sb.from('vs_projects').delete().eq('id',id).catch(()=>{});
+  renderVsProjects();showToast('Gelöscht');
+}
+
+// ===== FLOATING AI ASSISTANT =====
+let aiPanelOpen=false;
+let aiMessages=[];
+let aiThinking=false;
+
+function toggleAiPanel(){
+  aiPanelOpen=!aiPanelOpen;
+  document.getElementById('ai-float-panel').classList.toggle('open',aiPanelOpen);
+  document.getElementById('ai-float-btn').classList.toggle('open',aiPanelOpen);
+  const icon=document.getElementById('ai-float-btn').querySelector('i');
+  icon.className=aiPanelOpen?'ti ti-x':'ti ti-sparkles';
+  if(aiPanelOpen)setTimeout(()=>document.getElementById('ai-panel-inp').focus(),200);
+}
+
+function aiSuggestion(text){
+  document.getElementById('ai-panel-inp').value=text;
+  sendAiMessage();
+}
+
+function addAiMessage(role,content){
+  const msgs=document.getElementById('ai-panel-messages');
+  const div=document.createElement('div');
+  div.className=`ai-msg ${role}`;
+  div.innerHTML=content;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+  return div;
+}
+
+function removeThinkingMsg(){
+  const msgs=document.getElementById('ai-panel-messages');
+  const thinking=msgs.querySelector('.thinking');
+  if(thinking)msgs.removeChild(thinking);
+}
+
+// Navigation intent handler
+function handleAiNavIntent(msg){
+  const lower=msg.toLowerCase();
+  const navMap={
+    'dashboard':['dashboard','übersicht','home'],
+    'tasks':['task','aufgabe','aufgaben','to-do','todo'],
+    'habits':['habit','gewohnheit'],
+    'notes':['notiz','notizen','note'],
+    'et-overview':['eternell übersicht','brand übersicht','marken'],
+    'et-shopify':['shopify','shop','umsatz','orders'],
+    'et-finances':['finanzen','finan','ausgaben','budget','geld'],
+    'et-drops':['drop','drops','release','kollektion'],
+    'et-campaigns':['kampagne','kampagnen','werbung','ads','marketing'],
+    'et-calendar':['kalender','calendar','event','termine'],
+    'video-studio':['video studio','video erstell','neues video','video projekt','studio','storyboard'],
+    'vs-projects':['projekte','meine videos','video projekte','gespeicherte videos']
+  };
+  for(const[page,keywords]of Object.entries(navMap)){
+    if(keywords.some(k=>lower.includes(k))){
+      showPage(page);
+      return page;
+    }
+  }
+  return null;
+}
+
+async function sendAiMessage(){
+  if(aiThinking)return;
+  const inp=document.getElementById('ai-panel-inp');
+  const msg=inp.value.trim();if(!msg)return;
+  inp.value='';
+  addAiMessage('user',msg);
+  aiThinking=true;
+  document.getElementById('ai-panel-send').disabled=true;
+
+  const thinkEl=addAiMessage('assistant thinking','<span class="gen-dots"><span class="gen-dot"></span><span class="gen-dot"></span><span class="gen-dot"></span></span>');
+
+  // Check navigation intent
+  const navDest=handleAiNavIntent(msg);
+
+  // Check note intent
+  const noteMatch=msg.match(/füge? (.+?) (zu|in) (den? )?notizen?/i)||msg.match(/notiere?:?\s+(.+)/i)||msg.match(/schreibe? (.+?) (in die|in) notizen?/i);
+
+  try{
+    // Build context
+    const openTasks=tasks.filter(t=>!t.done).map(t=>t.text).slice(0,5);
+    const nextDrop=drops.find(d=>d.status!=='sold_out'&&d.status!=='archived');
+    const contextInfo=`Kontext: Offene Tasks: ${openTasks.join(', ')||'keine'}. Nächster Drop: ${nextDrop?nextDrop.name+' am '+nextDrop.drop_date:'keiner geplant'}. Aktuell auf Seite: ${document.querySelector('.page.active')?.id?.replace('page-','')||'dashboard'}. Gespeicherte Video-Projekte: ${vsProjects.length}.`;
+
+    const systemPrompt=`Du bist der persönliche KI-Assistent für Tim, Gründer der Luxusparfum-Brand Eternell. Du hilfst bei Business, Kreativarbeit und Navigation im Eternell Hub. Antworte kurz, auf Deutsch, direkt und hilfreich. Max 3 Sätze. Kein Markdown. ${navDest?'Du hast zur Seite '+navDest+' navigiert.':''} ${noteMatch?'Du hast die Notiz hinzugefügt.':''} ${contextInfo}`;
+
+    // If note intent, add to notes
+    if(noteMatch){
+      const noteText=noteMatch[1];
+      const timestamp=new Date().toLocaleTimeString('de',{hour:'2-digit',minute:'2-digit'});
+      noteContent=(noteContent?noteContent+'\n':'')+`[${timestamp}] ${noteText}`;
+      const na=document.getElementById('quick-note');if(na)na.value=noteContent;
+      const nb=document.getElementById('notes-full');if(nb)nb.value=noteContent;
+      await sb.from('notes').upsert({id:'main',content:noteContent}).catch(()=>{});
+    }
+
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:200,
+        system:systemPrompt,
+        messages:[
+          ...aiMessages.slice(-6).map(m=>({role:m.role,content:m.content})),
+          {role:'user',content:msg}
+        ]
+      })
+    });
+    const data=await res.json();
+    const reply=data.content[0].text;
+    aiMessages.push({role:'user',content:msg},{role:'assistant',content:reply});
+    removeThinkingMsg();
+    addAiMessage('assistant',reply);
+  }catch(e){
+    removeThinkingMsg();
+    addAiMessage('assistant','Entschuldigung, es gab einen Fehler. Bitte versuch es nochmal.');
+  }
+  aiThinking=false;
+  document.getElementById('ai-panel-send').disabled=false;
+}
+
+// TASK ACTIONS
+async function toggleTask(id){const t=tasks.find(t=>t.id===id);if(!t)return;t.done=!t.done;renderTasks();renderStats();await sb.from('tasks').update({done:t.done}).eq('id',id);}
+async function deleteTask(id){tasks=tasks.filter(t=>t.id!==id);renderTasks();renderStats();await sb.from('tasks').delete().eq('id',id);showToast('Gelöscht');}
+function toggleAdd(type){const row=document.getElementById('add-'+type+'-row');if(!row)return;const vis=row.style.display==='none'||!row.style.display;row.style.display=vis?'flex':'none';if(vis){const inp=document.getElementById('add-'+type+'-input');if(inp)inp.focus();}}
+async function addTask(type){const base=type.replace(/2$/,'');const inp=document.getElementById('add-'+type+'-input');if(!inp)return;const text=inp.value.trim();if(!text)return;const id='task_'+Date.now();const task={id,type:base,text,done:false};tasks.push(task);inp.value='';document.getElementById('add-'+type+'-row').style.display='none';renderTasks();renderStats();await sb.from('tasks').insert(task);showToast('Aufgabe hinzugefügt');}
+
+// HABIT ACTIONS
+async function toggleHabit(id,key){const h=habits.find(h=>h.id===id);if(!h)return;if(!h.days)h.days={};h.days[key]=!h.days[key];renderHabits();renderStats();await sb.from('habits').update({days:h.days}).eq('id',id);}
+async function deleteHabit(id){habits=habits.filter(h=>h.id!==id);renderHabits();renderStats();await sb.from('habits').delete().eq('id',id);}
+async function addHabit(){const inp=document.getElementById('add-habit-input');const text=inp.value.trim();if(!text)return;const id='habit_'+Date.now();const habit={id,text,days:{}};habits.push(habit);inp.value='';document.getElementById('add-habit-row').style.display='none';renderHabits();renderStats();await sb.from('habits').insert(habit);showToast('Habit hinzugefügt');}
+
+// NOTES
+function debounceNote(){const v1=document.getElementById('quick-note')?.value;const v2=document.getElementById('notes-full')?.value;noteContent=v1||v2||'';clearTimeout(noteTimer);noteTimer=setTimeout(async()=>await sb.from('notes').upsert({id:'main',content:noteContent}),1000);}
+
+// SHOPIFY
+async function saveShopifyEntry(){const m=document.getElementById('sh-month').value;const r=document.getElementById('sh-revenue').value;const o=document.getElementById('sh-orders').value;const nc=document.getElementById('sh-new-customers').value;const note=document.getElementById('sh-note').value;if(!m||!r)return showToast('Monat & Umsatz angeben',true);const entry={id:'sh_'+m,month:m,revenue:parseFloat(r)||0,orders:parseInt(o)||0,new_customers:parseInt(nc)||0,note};const existing=shopifyData.findIndex(d=>d.id===entry.id);if(existing>=0)shopifyData[existing]=entry;else shopifyData.push(entry);shopifyData.sort((a,b)=>a.month.localeCompare(b.month));await sb.from('shopify_data').upsert(entry);closeModal('modal-shopify-entry');renderShopify();renderStats();showToast('Shopify Eintrag gespeichert');}
+async function deleteShopifyEntry(id){shopifyData=shopifyData.filter(d=>d.id!==id);await sb.from('shopify_data').delete().eq('id',id);renderShopify();renderStats();}
+
+// PRODUCTS
+async function saveProduct(){const n=document.getElementById('prod-name').value.trim();if(!n)return;const p={id:'prod_'+Date.now(),name:n,price:parseFloat(document.getElementById('prod-price').value)||0,stock:parseInt(document.getElementById('prod-stock').value)||0,sold:parseInt(document.getElementById('prod-sold').value)||0,status:document.getElementById('prod-status').value};products.push(p);await sb.from('products').insert(p);closeModal('modal-product-entry');renderProducts();renderStats();showToast('Produkt gespeichert');}
+async function deleteProduct(id){products=products.filter(p=>p.id!==id);await sb.from('products').delete().eq('id',id);renderProducts();renderStats();}
+
+// FINANCES
+async function saveFinanceEntry(){const a=document.getElementById('fin-amount').value;if(!a)return;const f={id:'fin_'+Date.now(),date:document.getElementById('fin-date').value||new Date().toISOString().split('T')[0],amount:parseFloat(a)||0,category:document.getElementById('fin-category').value,description:document.getElementById('fin-desc').value};finances.unshift(f);await sb.from('finances').insert(f);closeModal('modal-finance-entry');renderFinances();renderStats();showToast('Ausgabe gespeichert');}
+async function deleteFinance(id){finances=finances.filter(f=>f.id!==id);await sb.from('finances').delete().eq('id',id);renderFinances();renderStats();}
+
+// DROPS
+async function saveDrop(){const n=document.getElementById('drop-name').value.trim();if(!n)return;const d={id:'drop_'+Date.now(),name:n,drop_date:document.getElementById('drop-date').value,status:document.getElementById('drop-status').value,products:document.getElementById('drop-products').value,budget:parseFloat(document.getElementById('drop-budget').value)||0,notes:document.getElementById('drop-notes').value};drops.push(d);drops.sort((a,b)=>a.drop_date?.localeCompare(b.drop_date)||0);await sb.from('drops').insert(d);closeModal('modal-drop-entry');renderDrops();renderStats();showToast('Drop gespeichert');}
+async function deleteDrop(id){drops=drops.filter(d=>d.id!==id);await sb.from('drops').delete().eq('id',id);renderDrops();renderStats();}
+
+// CAMPAIGNS
+async function saveCampaign(){const n=document.getElementById('camp-name').value.trim();if(!n)return;const c={id:'camp_'+Date.now(),name:n,channel:document.getElementById('camp-channel').value,status:document.getElementById('camp-status').value,budget:parseFloat(document.getElementById('camp-budget-inp').value)||0,spent:parseFloat(document.getElementById('camp-spent-inp').value)||0,clicks:parseInt(document.getElementById('camp-clicks').value)||0,conversions:parseInt(document.getElementById('camp-conv').value)||0};campaigns.push(c);await sb.from('campaigns').insert(c);closeModal('modal-campaign-entry');renderCampaigns();showToast('Kampagne gespeichert');}
+async function deleteCampaign(id){campaigns=campaigns.filter(c=>c.id!==id);await sb.from('campaigns').delete().eq('id',id);renderCampaigns();}
+
+// CALENDAR
+function changeMonth(dir){calMonth+=dir;if(calMonth>11){calMonth=0;calYear++;}else if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
+function quickAddEvent(date){document.getElementById('event-date').value=date;openModal('modal-event-entry');}
+async function saveEvent(){const t=document.getElementById('event-title').value.trim();if(!t)return;const e={id:'evt_'+Date.now(),title:t,event_date:document.getElementById('event-date').value,type:document.getElementById('event-type').value,note:document.getElementById('event-note').value};calEvents.push(e);await sb.from('cal_events').insert(e);closeModal('modal-event-entry');renderCalendar();showToast('Event gespeichert');}
+
+function switchShopifyTab(tab){document.getElementById('shopify-tab-monthly').style.display=tab==='monthly'?'block':'none';document.getElementById('shopify-tab-products').style.display=tab==='products'?'block':'none';document.querySelectorAll('.tab-bar .tab').forEach((t,i)=>t.classList.toggle('active',(tab==='monthly'&&i===0)||(tab==='products'&&i===1)));}
+
+// MODAL
+function openModal(id){document.getElementById(id).classList.add('show');}
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show');}));
+
+// PAGE
+function showPage(name){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));const p=document.getElementById('page-'+name);if(p)p.classList.add('active');document.querySelectorAll('.nav-item').forEach(n=>{if(n.getAttribute('onclick')?.includes("'"+name+"'"))n.classList.add('active');});if(name==='et-shopify')setTimeout(updateShopifyChart,100);if(name==='et-overview')setTimeout(updateRevenueChart,100);if(name==='et-finances')setTimeout(updateExpensesChart,100);}
+
+// AI
+function openClaude(q){window.open('https://claude.ai/new?q='+encodeURIComponent(q),'_blank');}
+function sendAI(){const inp=document.getElementById('ai-input');const q=inp.value.trim();if(!q)return;inp.value='';openClaude(q);}
+
 // TOAST
 function showToast(msg,err=false){const t=document.getElementById('toast');document.getElementById('toast-icon').className=err?'ti ti-alert-circle':'ti ti-check';document.getElementById('toast-icon').style.color=err?'var(--red)':'var(--green)';document.getElementById('toast-msg').textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
 
@@ -920,11 +1707,12 @@ fetch('https://api.open-meteo.com/v1/forecast?latitude=51.896&longitude=11.054&c
 
 // SUPABASE TABLES CHECK & INIT
 async function ensureTables(){
-  const tables=['shopify_data','products','finances','drops','campaigns','cal_events'];
+  const tables=['shopify_data','products','finances','drops','campaigns','cal_events','vs_projects'];
   for(const t of tables){await sb.from(t).select('id').limit(1).catch(()=>{});}
 }
 
-ensureTables().then(()=>loadAll());
+// Always start, even if ensureTables fails
+try{ensureTables().catch(()=>{}).finally(()=>loadAll());}catch(e){loadAll();}
 </script>
 </body>
 </html>
